@@ -18,6 +18,7 @@ export class TagService {
 
     const tag = Tag.create({
       title: dto.title,
+      prefix: dto.prefix,
       time: dto.time,
     });
     return await this.tagRepository.save(tag);

@@ -2,9 +2,8 @@ import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/co
 import { CashMachineService } from './cash-machine.service';
 import { CreateCashMachineDto } from './dto/create-cash-machine.dto';
 import { AdminGuard } from '../user/guards/admin.guard';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { UserDecorator } from '../user/decorators/user.decorator';
 import { CreateCashMachineHistoryDto } from './dto/create-cash-machine-history.dto';
+import { UpdateBalanceForce } from './dto/update-cash-machine.dto';
 
 @Controller('cash-machine')
 export class CashMachineController {
@@ -26,6 +25,11 @@ export class CashMachineController {
   @UseGuards(AdminGuard)
   async findHistoryByMachine(@Param('id') machineId: string) {
     return await this.cashMachineService.findHistoryByMachineId(machineId);
+  }
+
+  @Patch(':id/force')
+  async updateBalanceForce(@Body() dto: UpdateBalanceForce) {
+    return await this.cashMachineService.updateBalanceForce(dto);
   }
 
   @Patch(':id')

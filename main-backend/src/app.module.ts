@@ -9,6 +9,10 @@ import { CashMachineModule } from './cash-machine/cash-machine.module';
 import { FaqModule } from './faq/faq.module';
 import { PhilanthropyModule } from './philanthropy/philanthropy.module';
 import { TagModule } from './tag/tag.module';
+import { DepartmentModule } from './department/department.module';
+import { EmployeeModule } from './employee/employee.module';
+import { DepartmentQueueModule } from './department-queue/department-queue.module';
+import { TicketModule } from './ticket/ticket.module';
 
 @Module({
   imports: [
@@ -30,7 +34,11 @@ import { TagModule } from './tag/tag.module';
     CashMachineModule,
     FaqModule,
     PhilanthropyModule,
-    TagModule
+    TagModule,
+    DepartmentModule,
+    EmployeeModule,
+    DepartmentQueueModule,
+    TicketModule
   ],
 })
 export class AppModule {}
