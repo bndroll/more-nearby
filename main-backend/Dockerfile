@@ -6,4 +6,4 @@ RUN npm install
 COPY ./main-backend .
 EXPOSE 8080
 RUN npm run build
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
