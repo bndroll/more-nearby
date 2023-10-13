@@ -3,14 +3,18 @@ import 'dart:math';
 
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:location/location.dart';
 import 'package:vtb_map/core/di/locator.dart';
+import 'package:vtb_map/core/presentation/bottom_sheet/domain/show_default_bottom_sheet.dart';
 import 'package:vtb_map/core/routing/routes_path.dart';
+import 'package:vtb_map/features/banks/presentation/widgets/department_view.dart';
 import 'package:vtb_map/features/map/domain/entities/app_location.dart';
 import 'package:vtb_map/features/map/domain/services/location_service.dart';
 import 'package:vtb_map/features/map/domain/use_cases/create_driving_route_use_case.dart';
 import 'package:vtb_map/features/map/domain/utils/yandex_map_helper.dart';
 import 'package:vtb_map/features/map/presentation/pages/route_page.dart';
+import 'package:vtb_map/features/map/presentation/view_models/map_page_view_model.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class ControlButton extends StatelessWidget {
@@ -40,6 +44,7 @@ class _MapPageState extends State<MapPage> {
   final GlobalKey mapKey = GlobalKey();
   final defaultPoint = const MoscowLocation();
   late AppLocation _useLocation = defaultPoint;
+  final _viewModel = locator<MapPageViewModel>();
 
   late final YandexMapHelper _yMapHelper;
 
@@ -58,6 +63,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
+    _viewModel.getDepartments();
     // _locationService.askPermissions(enableBackground: true);
     // _locationService
     //     .getLocationChangeStream()
@@ -105,6 +111,11 @@ class _MapPageState extends State<MapPage> {
     }
    }
 
+   _buildOnDepartmentTap(int departmentId, BuildContext context) => () {
+    showDefaultBottomSheet(context, [
+      const Center(child: Text('Инфа о ебучем банке'))
+    ]);
+   };
 
   Future<UserLocationView> onUserLocationAdded(UserLocationView view) async {
     return view.copyWith(
@@ -128,15 +139,22 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: YandexMap(
-          key: mapKey,
-          mapObjects: [
-           if(endPoint != null) PlacemarkMapObject(mapId: const MapObjectId('end_point'), point: endPoint!)
-          ],
-          mapMode: MapMode.driving,
-          onMapTap: onMapTap,
-          onMapCreated: onMapCreated,
-          onUserLocationAdded: onUserLocationAdded ,
+      body: Observer(
+        builder: (_) => YandexMap(
+            key: mapKey,
+            mapObjects: [
+              ..._viewModel.departments.map((d) => DepartmentView(
+                  departmentId: d.id,
+                  location: d.point,
+                  onTap: _buildOnDepartmentTap(d.id, context)
+              )),
+             if(endPoint != null) PlacemarkMapObject(mapId: const MapObjectId('end_point'), point: endPoint!)
+            ],
+            mapMode: MapMode.driving,
+            onMapTap: onMapTap,
+            onMapCreated: onMapCreated,
+            onUserLocationAdded: onUserLocationAdded ,
+        ),
       ),
       floatingActionButton: Row(children: [
         IconButton(

@@ -1,19 +1,22 @@
 import 'package:mobx/mobx.dart';
 import 'package:vtb_map/core/utils/utility_types/request_status.dart';
+import 'package:vtb_map/features/banks/data/banks_repository.dart';
+import '../../../banks/entities/department.dart';
 import '../../domain/entities/app_location.dart';
 
 part 'map_page_view_model.g.dart';
 
 final class _MapViewModelState {
   final RequestStatus userLocStatus;
-  final RequestStatus banksStatus;
+  final RequestStatus departmentsStatus;
   final List<AppLocation> points;
+  final List<Department> departments;
 
-//<editor-fold desc="Data Methods">
   const _MapViewModelState({
     required this.userLocStatus,
-    required this.banksStatus,
+    required this.departmentsStatus,
     required this.points,
+    required this.departments,
   });
 
   @override
@@ -22,36 +25,42 @@ final class _MapViewModelState {
       (other is _MapViewModelState &&
           runtimeType == other.runtimeType &&
           userLocStatus == other.userLocStatus &&
-          banksStatus == other.banksStatus &&
-          points == other.points);
+          departmentsStatus == other.departmentsStatus &&
+          points == other.points &&
+          departments == other.departments);
 
   @override
   int get hashCode =>
-      userLocStatus.hashCode ^ banksStatus.hashCode ^ points.hashCode;
+      userLocStatus.hashCode ^
+      departmentsStatus.hashCode ^
+      points.hashCode ^
+      departments.hashCode;
 
   @override
   String toString() {
-    return '_MapViewModelState{ userLocStatus: $userLocStatus, banksStatus: $banksStatus, points: $points,}';
+    return '_MapViewModelState{ userLocStatus: $userLocStatus, banksStatus: $departmentsStatus, points: $points, departments: $departments,}';
   }
 
   _MapViewModelState copyWith({
     RequestStatus? userLocStatus,
-    RequestStatus? banksStatus,
+    RequestStatus? departmentsStatus,
     List<AppLocation>? points,
+    List<Department>? departments,
   }) {
     return _MapViewModelState(
       userLocStatus: userLocStatus ?? this.userLocStatus,
-      banksStatus: banksStatus ?? this.banksStatus,
+      departmentsStatus: departmentsStatus ?? this.departmentsStatus,
       points: points ?? this.points,
+      departments: departments ?? this.departments,
     );
   }
-
 }
 
 const _initialState = _MapViewModelState(
     userLocStatus: RequestStatus.never,
-    banksStatus: RequestStatus.never,
-    points: []
+    departmentsStatus: RequestStatus.never,
+    points: [],
+    departments: []
 );
 
 class MapPageViewModel = MapPageViewModelBase with _$MapPageViewModel;
@@ -61,6 +70,19 @@ class MapPageViewModel = MapPageViewModelBase with _$MapPageViewModel;
 abstract class MapPageViewModelBase with Store {
   @observable
   var _state = _initialState;
+  final _banksRepository = const BanksRepository();
+
+  @computed
+  bool get isDepartmentsLoaded => _state.departmentsStatus == RequestStatus.successful;
+  @computed
+  List<Department> get departments => _state.departments;
+
+  getDepartments() async {
+    if(isDepartmentsLoaded) return;
+    _setState(_state.copyWith(departmentsStatus: RequestStatus.loading));
+    final departments = (await _banksRepository.getDepartments());
+    _setState(_state.copyWith(departmentsStatus: RequestStatus.successful, departments: departments));
+  }
 
   @action
   _setState(_MapViewModelState state) => _state = state;
