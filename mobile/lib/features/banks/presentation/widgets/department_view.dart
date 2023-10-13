@@ -2,11 +2,11 @@ import 'package:vtb_map/features/map/domain/entities/app_location.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class DepartmentView extends PlacemarkMapObject {
-  final int departmentId;
+  final String departmentId;
   final AppLocation departmentLocation;
 
   factory DepartmentView({
-    required int departmentId,
+    required String departmentId,
     required AppLocation location,
     required void Function() onTap,
   }) => DepartmentView._(

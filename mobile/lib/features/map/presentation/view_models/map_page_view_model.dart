@@ -70,7 +70,7 @@ class MapPageViewModel = MapPageViewModelBase with _$MapPageViewModel;
 abstract class MapPageViewModelBase with Store {
   @observable
   var _state = _initialState;
-  final _banksRepository = const BanksRepository();
+  final _banksRepository = BanksRepository();
 
   @computed
   bool get isDepartmentsLoaded => _state.departmentsStatus == RequestStatus.successful;
@@ -80,8 +80,10 @@ abstract class MapPageViewModelBase with Store {
   getDepartments() async {
     if(isDepartmentsLoaded) return;
     _setState(_state.copyWith(departmentsStatus: RequestStatus.loading));
-    final departments = (await _banksRepository.getDepartments());
-    _setState(_state.copyWith(departmentsStatus: RequestStatus.successful, departments: departments));
+    final departments = (await _banksRepository.getDepartments()).match(
+            (l) => _setState(_state.copyWith(departmentsStatus: RequestStatus.error)),
+            (r) => _setState(_state.copyWith(departmentsStatus: RequestStatus.successful, departments: r))
+    );
   }
 
   @action

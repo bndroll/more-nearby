@@ -13,8 +13,10 @@ import 'package:vtb_map/features/map/domain/entities/app_location.dart';
 import 'package:vtb_map/features/map/domain/services/location_service.dart';
 import 'package:vtb_map/features/map/domain/use_cases/create_driving_route_use_case.dart';
 import 'package:vtb_map/features/map/domain/utils/yandex_map_helper.dart';
+import 'package:vtb_map/features/map/presentation/pages/department_info_page.dart';
 import 'package:vtb_map/features/map/presentation/pages/route_page.dart';
 import 'package:vtb_map/features/map/presentation/view_models/map_page_view_model.dart';
+import 'package:vtb_map/features/map/presentation/widgets/route_point_view.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class ControlButton extends StatelessWidget {
@@ -73,29 +75,13 @@ class _MapPageState extends State<MapPage> {
 
   onTapCreateDrivingRoute() async {
     final pEnd = endPoint;
-    if(pEnd == null) return;
+    if (pEnd == null) return;
     final startLocation = _useLocation;
     context.beamToNamed(routeSession, data: [
-        PlacemarkMapObject(
-            mapId: const MapObjectId('end_placemark'),
-                                point: Point(longitude: startLocation.long, latitude: startLocation.lat),
-                                icon: PlacemarkIcon.single(
-                                    PlacemarkIconStyle(
-                                        image: BitmapDescriptor.fromAssetImage('assets/icons/route_end.png'),
-                                        scale: 0.3
-                                    )
-                                )
-                            ),
-      PlacemarkMapObject(
-          mapId: const MapObjectId('end_placemark'),
-          point: pEnd,
-          icon: PlacemarkIcon.single(
-              PlacemarkIconStyle(
-                  image: BitmapDescriptor.fromAssetImage('assets/icons/route_end.png'),
-                  scale: 0.3
-              )
-          )
-      ),
+      RoutePointView(id: 'start_placemark', location: startLocation),
+      RoutePointView(
+          id: 'end_point',
+          location: AppLocation(long: pEnd.longitude, lat: pEnd.latitude))
     ]);
   }
 
@@ -104,67 +90,144 @@ class _MapPageState extends State<MapPage> {
     _yMapHelper = YandexMapHelper(controller: _controller);
     await _controller.toggleUserLayer(visible: true, autoZoomEnabled: true);
     _yMapHelper.moveToCurrentLocation(defaultPoint);
-    final isGranted = await _locationService.askPermissions(enableBackground: true);
-    if(isGranted) {
+    final isGranted =
+        await _locationService.askPermissions(enableBackground: true);
+    if (isGranted) {
       _useLocation = await _locationService.getCurrLocation();
       _yMapHelper.moveToCurrentLocation(_useLocation);
     }
-   }
+  }
 
-   _buildOnDepartmentTap(int departmentId, BuildContext context) => () {
-    showDefaultBottomSheet(context, [
-      const Center(child: Text('Инфа о ебучем банке'))
-    ]);
-   };
+  _buildOnDepartmentTap(String departmentId, BuildContext context) => () {
+        showDefaultBottomSheet(
+            context, [
+              DepartmentInfoPage(department: _viewModel.departments.firstWhere((element) => element.id == departmentId))
+        ]);
+      };
 
   Future<UserLocationView> onUserLocationAdded(UserLocationView view) async {
     return view.copyWith(
         pin: view.pin.copyWith(
-            icon: PlacemarkIcon.single(
-                PlacemarkIconStyle(image: BitmapDescriptor.fromAssetImage('assets/icons/user.png'))
-            )
-        ),
+            icon: PlacemarkIcon.single(PlacemarkIconStyle(
+                image:
+                    BitmapDescriptor.fromAssetImage('assets/icons/user.png')))),
         arrow: view.arrow.copyWith(
-            icon: PlacemarkIcon.single(
-                PlacemarkIconStyle(image: BitmapDescriptor.fromAssetImage('lib/assets/arrow.png'))
-            )
-        ),
-        accuracyCircle: view.accuracyCircle.copyWith(
-            fillColor: Colors.green.withOpacity(0.5)
-        )
-    );
+            icon: PlacemarkIcon.single(PlacemarkIconStyle(
+                image:
+                    BitmapDescriptor.fromAssetImage('lib/assets/arrow.png')))),
+        accuracyCircle: view.accuracyCircle.copyWith(isVisible: false));
+  }
+
+  _onZoomIn() {
+    _controller.moveCamera(CameraUpdate.zoomIn(), animation:  const MapAnimation(type: MapAnimationType.linear, duration: 0.3),);
+  }
+
+  _onZoomOut() {
+    _controller.moveCamera(CameraUpdate.zoomOut(), animation:  const MapAnimation(type: MapAnimationType.linear, duration: 0.3));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: Observer(
-        builder: (_) => YandexMap(
-            key: mapKey,
-            mapObjects: [
-              ..._viewModel.departments.map((d) => DepartmentView(
-                  departmentId: d.id,
-                  location: d.point,
-                  onTap: _buildOnDepartmentTap(d.id, context)
-              )),
-             if(endPoint != null) PlacemarkMapObject(mapId: const MapObjectId('end_point'), point: endPoint!)
-            ],
-            mapMode: MapMode.driving,
-            onMapTap: onMapTap,
-            onMapCreated: onMapCreated,
-            onUserLocationAdded: onUserLocationAdded ,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            flexibleSpace: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.all(Radius.circular((10)))),
+                  child: const TabBar(
+                    padding: EdgeInsets.all(5),
+                    dividerColor: Colors.transparent,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicator: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular((10))),
+                        color: Colors.white),
+                    unselectedLabelColor: Colors.black,
+                    labelColor: Colors.black,
+                    tabs: [
+                      Tab(text: 'Отделения'),
+                      Tab(
+                        text: 'Банкоматы',
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+        body: Stack(
+          children: [
+            Observer(
+              builder: (_) => YandexMap(
+                key: mapKey,
+                mapObjects: [
+                  ..._viewModel.departments.map((d) => DepartmentView(
+                      departmentId: d.id,
+                      location: d.point,
+                      onTap: _buildOnDepartmentTap(d.id, context))),
+                  if (endPoint != null)
+                    RoutePointView(
+                      id: 'end_point',
+                      location: AppLocation(
+                          lat: endPoint?.latitude ?? 0,
+                          long: endPoint?.longitude ?? 0),
+                    )
+                ],
+                mapMode: MapMode.driving,
+                onMapTap: onMapTap,
+                onMapCreated: onMapCreated,
+                onUserLocationAdded: onUserLocationAdded,
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.all(7),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: onCursorTap,
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          color: Colors.blue,
+                          child:  const Center(child: Icon(Icons.location_on)),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: _onZoomIn,
+                        child:  Container(
+                          height: 40,
+                          width: 40,
+                          color: Colors.white,
+                          child:  const Center(child: Icon(Icons.add)),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: _onZoomOut,
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          color: Colors.white,
+                          child:  const Center(child: Icon(Icons.remove)),
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
+          ],
         ),
       ),
-      floatingActionButton: Row(children: [
-        IconButton(
-          iconSize: 30,
-          icon: const Icon(Icons.location_on),
-          onPressed: onCursorTap,
-        ),
-        const SizedBox(width: 10),
-        ElevatedButton(onPressed: onTapCreateDrivingRoute, child: const Text('Построить авто маршрут'))
-      ]),
     );
   }
 }

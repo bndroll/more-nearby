@@ -4,6 +4,7 @@ import 'package:vtb_map/features/map/domain/entities/app_location.dart';
 import 'package:vtb_map/features/map/domain/use_cases/create_driving_route_use_case.dart';
 import 'package:vtb_map/features/map/domain/use_cases/create_pedestrian_route_use_case.dart';
 import 'package:vtb_map/features/map/domain/utils/yandex_map_helper.dart';
+import 'package:vtb_map/features/map/presentation/widgets/route_point_view.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 // class RoutePage extends StatefulWidget {
@@ -115,7 +116,11 @@ class _RoutePageState extends State<RoutePage>  with TickerProviderStateMixin{
       ),
         body: YandexMap(
             onMapCreated: onCreateMap,
-            mapObjects: mapObjects
+            mapObjects: [
+              ...mapObjects,
+              widget.startPlacemark,
+              widget.endPlacemark
+            ]
         )
     );
   }
@@ -143,7 +148,8 @@ class _RoutePageState extends State<RoutePage>  with TickerProviderStateMixin{
     });
     setState(() {
       result.routes!.asMap().forEach((i, route) {
-        mapObjects.add(PolylineMapObject(
+        mapObjects.add(
+            PolylineMapObject(
           mapId: MapObjectId('route_${i}_polyline'),
           polyline: Polyline(points: route.geometry),
           strokeColor: Colors.primaries[Random().nextInt(Colors.primaries.length)],

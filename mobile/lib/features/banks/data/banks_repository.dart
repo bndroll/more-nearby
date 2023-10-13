@@ -1,32 +1,21 @@
+import 'dart:convert';
+
+import 'package:fpdart/fpdart.dart';
+import 'package:vtb_map/core/utils/utility_types/failure.dart';
 import 'package:vtb_map/features/banks/entities/department.dart';
 import 'package:vtb_map/features/map/domain/entities/app_location.dart';
+import 'package:http/http.dart' as http;
 
 //51.528032, 45.979318
 class BanksRepository {
 
-  const BanksRepository();
+  final _baseUrl = const String.fromEnvironment("API");
 
-  Future<List<Department>> getDepartments() async {
-     return await Future.delayed(
-         const Duration(seconds: 1),
-             () => [
-               const Department(
-                   id: 0,
-                   point: AppLocation(lat: 51.528032, long: 45.979318)
-               ),
-               const Department(
-                   id: 1,
-                   point: AppLocation(lat: 51.508032, long: 45.479318)
-               ),
-               // const Department(
-               //     id: 2,
-               //     point: AppLocation(lat: 51.528032, long: 45.979318)
-               // ),
-               // const Department(
-               //     id: 3,
-               //     point: AppLocation(lat: 51.528032, long: 45.979318)
-               //),
-             ]
-     );
+  Future<Either<Failure, List<Department>>> getDepartments() async {
+    final res = await http.get(Uri.parse('$_baseUrl/api/department'));
+    if(res.statusCode == 500) return const Left(Failure(message: 'Ошибка сервера'));
+    if(res.statusCode >= 400) return const Left(Failure(message: ''));
+    return Right(Department.listFromJson(res.body));
+
   }
 }
