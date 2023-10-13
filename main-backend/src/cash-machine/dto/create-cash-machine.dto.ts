@@ -4,7 +4,15 @@ import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class CreateCashMachineDto {
   @IsNotEmpty()
   @IsString()
-  geo: string;
+  lat: string;
+
+  @IsNotEmpty()
+  @IsString()
+  lon: string;
+
+  @IsNotEmpty()
+  @IsString()
+  address: string;
 
   @IsNotEmpty()
   @IsEnum(CashMachineType)
@@ -16,7 +24,9 @@ export class CreateCashMachineDto {
 }
 
 export class CreateCashMachineEntityDto {
-  geo: string;
+  lat: string;
+  lon: string;
+  address: string;
   type: CashMachineType;
   info?: string;
 }

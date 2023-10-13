@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { CashMachineModule } from './cash-machine/cash-machine.module';
 import { FaqModule } from './faq/faq.module';
 import { PhilanthropyModule } from './philanthropy/philanthropy.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { PhilanthropyModule } from './philanthropy/philanthropy.module';
     UserModule,
     CashMachineModule,
     FaqModule,
-    PhilanthropyModule
+    PhilanthropyModule,
+    TagModule
   ],
 })
 export class AppModule {}

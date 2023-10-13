@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { FaqService } from './faq.service';
 import { CreateFaqDto } from './dto/create-faq.dto';
 import { AdminGuard } from '../user/guards/admin.guard';
@@ -16,6 +16,6 @@ export class FaqController {
 
   @Get()
   async findAll() {
-    return this.faqService.findAll();
+    return await this.faqService.findAll();
   }
 }

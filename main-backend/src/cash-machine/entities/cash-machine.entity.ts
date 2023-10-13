@@ -13,7 +13,13 @@ export class CashMachine {
   id: string;
 
   @Column('varchar')
-  geo: string;
+  lat: string;
+
+  @Column('varchar')
+  lon: string;
+
+  @Column('text')
+  address: string;
 
   @Column({ type: 'enum', enum: CashMachineType })
   type: CashMachineType;
@@ -27,7 +33,9 @@ export class CashMachine {
   static create(dto: CreateCashMachineEntityDto) {
     const instance = new CashMachine();
     instance.id = generateString();
-    instance.geo = dto.geo;
+    instance.lat = dto.lat;
+    instance.lon = dto.lon;
+    instance.address = dto.address;
     instance.type = dto.type;
     instance.info = dto.info;
     instance.balance = 0;

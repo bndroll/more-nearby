@@ -22,7 +22,9 @@ export class CashMachineService {
 
   async create(dto: CreateCashMachineDto) {
     const machine = CashMachine.create({
-      geo: dto.geo,
+      lon: dto.lon,
+      lat: dto.lat,
+      address: dto.address,
       type: dto.type,
       info: dto.info,
     });
