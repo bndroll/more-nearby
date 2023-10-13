@@ -16,6 +16,17 @@ services:
     networks:
       - network
 
+  mongo:
+    image: mongo
+    container_name: more-nearby-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - './data/mongo:/data/db'
+    networks:
+      - network
+
 networks:
   network:
     driver: bridge
