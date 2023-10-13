@@ -12,13 +12,14 @@ export class TagService {
 
   async create(dto: CreateTagDto) {
     const oldTag = await this.tagRepository.findByTitle(dto.title);
-    if (!oldTag) {
+    if (oldTag) {
       throw new BadRequestException();
     }
 
     const tag = Tag.create({
       title: dto.title,
       prefix: dto.prefix,
+      type: dto.type,
       time: dto.time,
     });
     return await this.tagRepository.save(tag);

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { DepartmentQueue } from '../entities/department-queue.entity';
 import { CreateDepartmentQueueDto } from '../dto/create-department-queue.dto';
 
@@ -19,5 +19,9 @@ export class DepartmentQueueRepository extends Repository<DepartmentQueue> {
 
   async findByDepartmentId(departmentId: string) {
     return await this.findBy({ departmentId });
+  }
+
+  async findByTagIds(tagIds: string[]) {
+    return await this.findBy({ tagId: In(tagIds) });
   }
 }

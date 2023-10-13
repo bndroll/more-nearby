@@ -24,6 +24,7 @@ export class Tag {
     instance.id = generateString();
     instance.title = dto.title;
     instance.prefix = dto.prefix;
+    instance.type = dto.type;
     instance.time = dto.time;
     return instance;
   }

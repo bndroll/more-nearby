@@ -10,6 +10,10 @@ export class CreateTagDto {
   prefix: string;
 
   @IsNotEmpty()
+  @IsString()
+  type: string;
+
+  @IsNotEmpty()
   @IsNumber()
   time: number;
 }
@@ -17,5 +21,6 @@ export class CreateTagDto {
 export class CreateTagEntityDto {
   title: string;
   prefix: string;
+  type: string;
   time: number;
 }

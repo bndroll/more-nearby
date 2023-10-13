@@ -2,11 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { Department } from './entities/department.entity';
 import { DepartmentRepository } from './repositories/department.repository';
+import { FindByFilterDto } from './dto/find-by-filter.dto';
+import { TagRepository } from '../tag/repositories/tag.repository';
+import { DepartmentQueueRepository } from '../department-queue/repositories/department-queue.repository';
 
 @Injectable()
 export class DepartmentService {
   constructor(
     private readonly departmentRepository: DepartmentRepository,
+    private readonly departmentQueueRepository: DepartmentQueueRepository,
+    private readonly tagRepository: TagRepository,
   ) {
   }
 
@@ -32,5 +37,12 @@ export class DepartmentService {
     }
 
     return department;
+  }
+
+  async findByFilter(query: FindByFilterDto) {
+    const types = query.services.split(',');
+    const tagIds = (await this.tagRepository.findByType(types)).map(item => item.id);
+    const departmentIds = (await this.departmentQueueRepository.findByTagIds(tagIds)).map(item => item.departmentId);
+    return Array.from(new Set(departmentIds));
   }
 }

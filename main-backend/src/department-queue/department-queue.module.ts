@@ -23,6 +23,7 @@ import { TicketCounterCron } from './cron/clear-counter.cron';
     TicketCounterRepository,
     TicketCounterCron
   ],
+  exports: [DepartmentQueueService, DepartmentQueueRepository]
 })
 export class DepartmentQueueModule {
 }
