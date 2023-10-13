@@ -18,11 +18,6 @@ export class DepartmentQueueService {
   }
 
   async create(dto: CreateDepartmentQueueDto) {
-    const oldQueue = await this.departmentQueueRepository.findUnique(dto);
-    if (oldQueue) {
-      throw new BadGatewayException(DepartmentQueueErrorMessages.AlreadyExist);
-    }
-
     const queue = DepartmentQueue.create({
       title: dto.title,
       tagId: dto.tagId,
