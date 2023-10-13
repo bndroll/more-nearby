@@ -20,6 +20,9 @@ export class Department {
   address: string;
 
   @Column('varchar', { nullable: true })
+  picture: string | null;
+
+  @Column('varchar', { nullable: true })
   info: string | null;
 
   static create(dto: CreateDepartmentEntityDto) {
@@ -29,11 +32,16 @@ export class Department {
     instance.lat = dto.lat;
     instance.lon = dto.lon;
     instance.address = dto.address;
+    instance.picture = dto.picture;
     instance.info = dto.info;
     return instance;
   }
 
   updateInfo(info: string) {
     this.info = info;
+  }
+
+  updatePicture(picture: string) {
+    this.picture = picture;
   }
 }

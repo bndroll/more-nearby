@@ -19,6 +19,10 @@ export class CreateDepartmentDto {
 
   @IsOptional()
   @IsString()
+  picture?: string;
+
+  @IsOptional()
+  @IsString()
   info?: string;
 }
 
@@ -27,5 +31,6 @@ export class CreateDepartmentEntityDto {
   lat: string;
   lon: string;
   address: string;
+  picture?: string;
   info?: string;
 }
