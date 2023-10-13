@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { TicketService } from './ticket.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { AdminGuard } from '../user/guards/admin.guard';
 
 @Controller('ticket')
 export class TicketController {
@@ -9,24 +9,19 @@ export class TicketController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   async create(@Body() dto: CreateTicketDto) {
     return await this.ticketService.create(dto);
   }
 
-  @Get('find/by-user-id/:id')
+  @Get('find/by-user/:id')
+  @UseGuards(AdminGuard)
   async findByUserId(@Param('id') userId: string) {
     return this.ticketService.findByUserId(userId);
   }
 
-  @Get()
-  findAll() {
-    return this.ticketService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ticketService.findOne(+id);
+  @Get('/find/active-by-user/:id')
+  async findUserTicket(@Param('id') userId: string) {
+    return this.ticketService.findUserTicket(userId);
   }
 
   // @Patch(':id')

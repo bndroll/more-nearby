@@ -5,6 +5,7 @@ export class CreateTicketDto {
   status: TicketStatus.Pending | TicketStatus.Open;
   userId: string;
   tagId: string;
+  visitDate: Date;
   departmentQueueId: string;
 }
 
@@ -17,5 +18,6 @@ export class CreateTicketEntityDto {
   additionallyType: TicketAdditionallyType;
   userId: string;
   tagId: string;
+  visitDate: Date;
   departmentQueueId: string;
 }

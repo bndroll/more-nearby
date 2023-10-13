@@ -52,6 +52,9 @@ export class Ticket {
   @Column('uuid', { nullable: true })
   philanthropyId: string | null;
 
+  @Column('date')
+  visitDate: Date;
+
   @CreateDateColumn()
   createdDate: Date;
 
@@ -66,6 +69,7 @@ export class Ticket {
     instance.additionallyType = dto.additionallyType;
     instance.userId = dto.userId;
     instance.tagId = dto.tagId;
+    instance.visitDate = dto.visitDate;
     instance.departmentQueueId = dto.departmentQueueId;
     return instance;
   }

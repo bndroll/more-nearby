@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { Ticket } from '../entities/ticket.entity';
+import { DataSource, In, Repository } from 'typeorm';
+import { Ticket, TicketStatus } from '../entities/ticket.entity';
 
 @Injectable()
 export class TicketRepository extends Repository<Ticket> {
@@ -14,5 +14,13 @@ export class TicketRepository extends Repository<Ticket> {
 
   async findByUserId(userId: string) {
     return await this.findBy({ userId });
+  }
+
+  async getLastTicketsByUserId(userId: string) {
+    return await this.find({ where: { userId }, order: { createdDate: 'DESC' }, take: 10 });
+  }
+
+  async findOpenTicketByUserId(userId: string) {
+    return await this.findOneBy({ userId, status: In([TicketStatus.Open, TicketStatus.Pending]) });
   }
 }
