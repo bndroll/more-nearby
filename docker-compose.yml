@@ -40,17 +40,6 @@ services:
     networks:
       - network
 
-  frontend:
-    build:
-      context: .
-      dockerfile: ./web/DockerFile
-    restart: unless-stopped
-    container_name: more-nearby-web
-    ports:
-      - "3001:3001"
-    networks:
-      - network
-
   emulator:
     build:
       context: .
@@ -59,6 +48,19 @@ services:
     container_name: more-nearby-emulator
     depends_on:
       - mongo
+    networks:
+      - network
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    restart: unless-stopped
+    container_name: more-nearby-web
+    ports:
+      - "3000:3000"
+    env_file:
+      - web/.env
     networks:
       - network
 
