@@ -79,7 +79,25 @@ export class TicketService {
 
   async findUserTicket(userId: string) {
     const ticket = await this.ticketRepository.findOpenTicketByUserId(userId);
+    const openQueueTickets = await this.ticketRepository.findOpenQueueTickets(ticket.departmentQueueId);
 
+    let position = 0;
+    let waitingTime = 0;
+    for (let i = 0; i < openQueueTickets.length; i++) {
+      if (openQueueTickets[i].id === ticket.id) {
+        position = i + 1;
+        break;
+      }
+      waitingTime = waitingTime + openQueueTickets[i].predictionTime;
+    }
+
+    return {
+      ticket: ticket,
+      queue: {
+        position: position,
+        waitingTime: waitingTime,
+      },
+    };
   }
 
   async openTicket(id: string) {
@@ -111,7 +129,7 @@ export class TicketService {
     if (dto.additionalType === TicketAdditionallyType.Fast) {
       predictionTime = Math.ceil(predictionTime - (predictionTime / 100 * 5));
     } else if (dto.additionalType === TicketAdditionallyType.Hard) {
-      predictionTime = Math.ceil(predictionTime + (predictionTime / 100 * 15));
+      predictionTime = Math.ceil(predictionTime + (predictionTime / 100 * 30));
     } else {
       predictionTime = tag.time;
     }

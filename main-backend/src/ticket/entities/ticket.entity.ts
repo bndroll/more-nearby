@@ -56,7 +56,7 @@ export class Ticket {
   @Column('date')
   visitDate: Date;
 
-  @Column('date', { nullable: true })
+  @Column('timestamp', { nullable: true })
   openDate: Date | null;
 
   @CreateDateColumn()

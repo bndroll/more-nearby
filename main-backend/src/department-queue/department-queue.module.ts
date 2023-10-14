@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { DepartmentQueueService } from './department-queue.service';
 import { DepartmentQueueController } from './department-queue.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,11 +9,13 @@ import { TicketCounterRepository } from './repositories/ticket-counter.repositor
 import { TicketCounterService } from './ticket-counter.service';
 import { TagModule } from '../tag/tag.module';
 import { TicketCounterCron } from './cron/clear-counter.cron';
+import { TicketHistoryModule } from '../ticket-history/ticket-history.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([DepartmentQueue, TicketCounter]),
-    TagModule
+    TagModule,
+    forwardRef(() => TicketHistoryModule)
   ],
   controllers: [DepartmentQueueController],
   providers: [

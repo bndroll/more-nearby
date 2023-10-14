@@ -31,11 +31,13 @@ export class TicketController {
   }
 
   @Patch(':id/close')
+  @UseGuards(AdminGuard)
   async closeTicket(@Param('id') id: string, @Body() dto: CloseTicketDto) {
     return this.ticketService.closeTicket(id, dto);
   }
 
   @Patch(':id/additional')
+  @UseGuards(AdminGuard)
   async updateAdditionalType(@Param('id') id: string, @Body() dto: UpdateTicketAdditionalTypeDto) {
     return this.ticketService.updateAdditionalType(id, dto);
   }

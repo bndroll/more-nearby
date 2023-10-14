@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TicketService } from './ticket.service';
 import { TicketController } from './ticket.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,7 +13,7 @@ import { DepartmentQueueModule } from '../department-queue/department-queue.modu
     TypeOrmModule.forFeature([Ticket]),
     UserModule,
     TagModule,
-    DepartmentQueueModule
+    forwardRef(() => DepartmentQueueModule)
   ],
   controllers: [TicketController],
   providers: [TicketService, TicketRepository],

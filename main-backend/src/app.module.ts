@@ -13,6 +13,7 @@ import { DepartmentModule } from './department/department.module';
 import { EmployeeModule } from './employee/employee.module';
 import { DepartmentQueueModule } from './department-queue/department-queue.module';
 import { TicketModule } from './ticket/ticket.module';
+import { TicketHistoryModule } from './ticket-history/ticket-history.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { TicketModule } from './ticket/ticket.module';
     DepartmentModule,
     EmployeeModule,
     DepartmentQueueModule,
-    TicketModule
+    TicketModule,
+    TicketHistoryModule
   ],
 })
 export class AppModule {}
