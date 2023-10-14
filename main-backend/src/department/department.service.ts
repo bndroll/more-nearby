@@ -36,7 +36,7 @@ export class DepartmentService {
     }
 
     const queuesAnalytic = await this.departmentRepository.findDepartmentQueueAnalytic(id);
-    const departmentQueues = (await this.departmentQueueRepository.findByDepartmentId(department.id))
+    const departmentQueues = (await this.departmentQueueRepository.findWithTagTitleByDepartmentId(department.id))
       .map(item => {
         const analytic = queuesAnalytic.find(el => el.id === item.id);
         return {
