@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 import { generateString } from '@nestjs/typeorm';
 import { CreatePhilanthropyEntityDto } from '../dto/create-philanthropy.dto';
 
@@ -12,6 +12,9 @@ export class PhilanthropyHistory {
 
   @Column('bigint')
   sum: number;
+
+  @CreateDateColumn()
+  createdDate: Date;
 
   static create(dto: CreatePhilanthropyEntityDto) {
     const instance = new PhilanthropyHistory();

@@ -16,6 +16,6 @@ export class FaqController {
 
   @Get()
   async findAll() {
-    return this.faqService.findAll();
+    return await this.faqService.findAll();
   }
 }

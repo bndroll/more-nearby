@@ -24,6 +24,17 @@ services:
       - "27017:27017"
     volumes:
       - './data/mongo:/data/db'
+
+  server:
+    build:
+      context: .
+      dockerfile: ./main-backend/Dockerfile
+    restart: unless-stopped
+    container_name: more-nearby-main-backend
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
     networks:
       - network
 

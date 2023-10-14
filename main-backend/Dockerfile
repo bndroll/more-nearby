@@ -1,9 +1,9 @@
 FROM node:16-alpine
 WORKDIR /app
 ENV NODE_ENV=production
-COPY package*.json ./
+COPY ./main-backend/package*.json ./
 RUN npm install
-COPY . .
+COPY ./main-backend .
 EXPOSE 8080
 RUN npm run build
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
