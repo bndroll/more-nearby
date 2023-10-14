@@ -8,7 +8,7 @@ export const DepartmentItemSmall = ({ item, onClick }) => {
         alignItems: "start",
         cursor: "pointer",
       }}
-      onClick={() => onClick()}
+      onClick={() => onClick && onClick()}
     >
       <div
         style={{

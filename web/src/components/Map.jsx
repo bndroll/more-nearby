@@ -4,6 +4,27 @@ import { Map, Placemark, RouteButton, YMaps } from "react-yandex-maps";
 import icon from "../assets/vtb_icon.png";
 import iconWhite from "../assets/vtb_icon_white.png";
 
+import selectedRed from "../assets/vtb_logo_sel_red.png";
+import selectedYellow from "../assets/vtb_logo_sel_yellow.png";
+import selectedGreen from "../assets/vtb_logo_sel_green.png";
+
+import unselectedRed from "../assets/vtb_logo_un_red.png";
+import unselectedYellow from "../assets/vtb_logo_un_yellow.png";
+import unselectedGreen from "../assets/vtb_logo_un_green.png";
+import { getStatus } from "../constants";
+
+const selectedIconMap = {
+  red: selectedRed,
+  green: selectedGreen,
+  yellow: selectedYellow,
+};
+
+const unselectedIconMap = {
+  red: unselectedRed,
+  yellow: unselectedYellow,
+  green: unselectedGreen,
+};
+
 export const YMap = ({ departments, onSelect, selectedDep }) => {
   const ymap = useRef();
 
@@ -46,7 +67,9 @@ export const YMap = ({ departments, onSelect, selectedDep }) => {
               options={{
                 iconLayout: "default#image",
                 iconImageHref:
-                  selectedDep && selectedDep.id === item.id ? icon : iconWhite,
+                  selectedDep && selectedDep.id === item.id
+                    ? selectedIconMap[getStatus(item.target)]
+                    : unselectedIconMap[getStatus(item.target)],
                 iconImageSize: [55, 55],
               }}
             />

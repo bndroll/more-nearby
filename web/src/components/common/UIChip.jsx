@@ -7,13 +7,14 @@ export const UIChip = ({
   checkedColor,
   uncheckedColor,
   type = "primary",
+  size = "md",
 }) => {
   return (
     <Chip
       variant="soft"
       sx={{ mr: 1, mb: 1 }}
       color={checked ? type : "neutral"}
-      size="md"
+      size={size}
     >
       <Checkbox
         color={checked ? type : "neutral"}
