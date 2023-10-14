@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
-import '../../../banks/entities/department.dart';
+import '../../entities/department.dart';
 
 class DepartmentInfoPage extends StatelessWidget {
   const DepartmentInfoPage({Key? key, required this.department}) : super(key: key);

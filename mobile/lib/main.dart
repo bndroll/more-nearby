@@ -2,6 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:vtb_map/core/di/locator.dart';
 import 'package:vtb_map/core/routing/router.dart';
+import 'package:vtb_map/core/theming/light_theme.dart';
 import 'features/map/presentation/pages/map_page.dart';
 
 void main() {
@@ -18,10 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0C277D)),
-        useMaterial3: true,
-      ),
+      theme: lightTheme,
       routerDelegate: beamerDelegate,
       backButtonDispatcher: BeamerBackButtonDispatcher(delegate: beamerDelegate),
       routeInformationParser: BeamerParser(),

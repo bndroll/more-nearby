@@ -16,14 +16,15 @@ class DepartmentView extends PlacemarkMapObject {
       onTap: (_, point) {
         onTap();
       },
+      opacity: 1,
       point:  Point(
           longitude: location.long,
           latitude: location.lat
       ),
       icon: PlacemarkIcon.single(
           PlacemarkIconStyle(
-              image: BitmapDescriptor.fromAssetImage('assets/icons/bank_icon.png'),
-              scale: 0.3
+              image: BitmapDescriptor.fromAssetImage('assets/icons/bank_placemark.png'),
+              scale: 3
           )
       )
   );
@@ -31,5 +32,5 @@ class DepartmentView extends PlacemarkMapObject {
   const DepartmentView._(
       this.departmentId,
       this.departmentLocation,
-      {required super.mapId, required super.point, super.onTap, super.icon, super.direction, super.text});
+      {required super.mapId, required super.point, super.onTap, super.icon, super.direction, super.opacity});
 }

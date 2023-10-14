@@ -12,7 +12,7 @@ class DefaultBottomSheetHeader extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(15))
         ),
         height: 5,
-        width: 70,
+        width: 96,
       ),
     );
   }
