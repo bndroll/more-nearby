@@ -3,6 +3,7 @@ import { DataSource, In, Repository } from 'typeorm';
 import { Department } from '../entities/department.entity';
 import { FindDepartmentLoadItemDto } from '../dto/find-department-load.dto';
 import { FindQueueAnalyticItemDto } from '../dto/find-queue-analytic.dto';
+import { FindGraphData } from '../dto/graph.dto';
 
 @Injectable()
 export class DepartmentRepository extends Repository<Department> {
@@ -36,6 +37,17 @@ export class DepartmentRepository extends Repository<Department> {
       join ticket t on t."departmentQueueId" = dq.id 
       where t.status = 'Open' and d.id = $1
       group by dq.id
+    `, [id]);
+  }
+
+  async findGraphDataByNums(id: string): Promise<FindGraphData[]> {
+    return await this.query(`
+      select thi.num, avg(thi.target) from department d 
+      join department_queue dq on d.id = dq."departmentId"
+      join ticket_history th on th."departmentQueueId" = dq.id 
+      join ticket_history_item thi on thi."historyId" = th.id 
+      where d.id = $1
+      group by thi.num
     `, [id]);
   }
 }

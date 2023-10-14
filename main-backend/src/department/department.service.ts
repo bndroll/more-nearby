@@ -7,6 +7,7 @@ import { TagRepository } from '../tag/repositories/tag.repository';
 import { DepartmentQueueRepository } from '../department-queue/repositories/department-queue.repository';
 import { DepartmentErrorMessages } from './department.constants';
 import { FindDepartmentsWithLoadResponseDto } from './dto/find-department-load.dto';
+import { GraphItem } from './dto/graph.dto';
 
 @Injectable()
 export class DepartmentService {
@@ -47,8 +48,22 @@ export class DepartmentService {
         };
       });
 
+    const graphDataByNum = await this.departmentRepository.findGraphDataByNums(department.id);
+    const graph: GraphItem[] = new Array(13)
+      .fill(0)
+      .map((item, i) => {
+          const num = i + 9;
+          const graphData = graphDataByNum.find(el => el.num === num);
+          return {
+            num: num,
+            value: graphData ? Math.round(graphData.avg) : 35 + Math.round(Math.random() * 30),
+          };
+        },
+      );
+
     return {
-      department,
+      ...department,
+      graph,
       queues: departmentQueues,
     };
   }
