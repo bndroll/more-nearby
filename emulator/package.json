@@ -1,0 +1,20 @@
+{
+  "name": "emulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@hokify/agenda": "^6.3.0",
+    "axios": "^1.5.1",
+    "dotenv": "^16.3.1",
+    "mongoose": "^7.6.2",
+    "node-cron": "^3.0.2",
+    "pino": "^8.16.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
