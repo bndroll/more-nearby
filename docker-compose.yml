@@ -48,7 +48,7 @@ services:
     container_name: more-nearby-web
     ports:
       - "3000:3000"
-    network:
+    networks:
       - network
 
   emulator:
