@@ -9,12 +9,12 @@ import '../services/location_service.dart';
 
 
 
-class CreatePedestrianUseCase implements UseCase<Future<Either<Failure, BicycleResultWithSession>>, CreateRoutesArgs> {
+class CreatePedestrianUseCase implements UseCase<Future<BicycleResultWithSession>, CreateRoutesArgs> {
 
   final _locationService = locator<LocationService>();
 
   @override
-  Future<Either<Failure, BicycleResultWithSession>> execute(CreateRoutesArgs args) async {
+  Future<BicycleResultWithSession> execute(CreateRoutesArgs args) async {
     final startLocation = args.start ?? (await _locationService.getCurrLocation());
 
     final points = [
@@ -28,6 +28,6 @@ class CreatePedestrianUseCase implements UseCase<Future<Either<Failure, BicycleR
             .toList(),
          bicycleVehicleType: BicycleVehicleType.bicycle
     );
-    return Right(pedestrianResWithSession);
+    return pedestrianResWithSession;
   }
 }

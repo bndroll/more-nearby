@@ -1,11 +1,12 @@
 import 'package:mobx/mobx.dart';
 import 'package:vtb_map/core/utils/utility_types/request_status.dart';
 import 'package:vtb_map/features/banks/entities/department.dart';
+import 'package:vtb_map/features/ticket/domain/department_with_times.dart';
 
-part 'create_ticket_stepper_view_model.g.dart';
+part 'create_ticket_store.g.dart';
 
 class _CreateTicketStepperViewModelState {
-  final List<Department>? requiredDeps;
+  final List<DepartmentWithTimes>? requiredDeps;
   final String? chosenDepId;
   final Duration? timeToSetInQueue;
   final int currStepIndex;
@@ -40,7 +41,7 @@ class _CreateTicketStepperViewModelState {
   }
 
   _CreateTicketStepperViewModelState copyWith({
-    List<Department>? requiredDeps,
+    List<DepartmentWithTimes>? requiredDeps,
     String? chosenDepId,
     Duration? timeToSetInQueue,
     int? currStepIndex,
@@ -57,14 +58,14 @@ class _CreateTicketStepperViewModelState {
 
 const _initialState = _CreateTicketStepperViewModelState(currStepIndex: 0);
 
-class CreateTicketStepperViewModel = CreateTicketStepperViewModelBase with _$CreateTicketStepperViewModel;
+class CreateTicketStore = CreateTicketStoreBase with _$CreateTicketStore;
 
-abstract class CreateTicketStepperViewModelBase with Store {
+abstract class CreateTicketStoreBase with Store {
   @observable
   var _state = _initialState;
 
   updateStepper({
-    List<Department>? requiredDeps,
+    List<DepartmentWithTimes>? requiredDeps,
     String? chosenDepId,
     Duration? timeToSetInQueuee,
 }) {

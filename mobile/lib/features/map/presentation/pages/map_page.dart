@@ -196,10 +196,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver, TickerPr
                           onTap: _buildOnCashMachineTap(m.id, context)
                       )),
                       if(!_viewModel.isShowCashMachines) ..._viewModel.departments.map((d) =>
-                          DepartmentView(
-                              departmentId: d.id,
-                              location: d.point,
-                              onTap: _buildOnDepartmentTap(d.id, context))),
+                          DepartmentView(onTap: _buildOnDepartmentTap(d.id, context), department: d)),
                       if (endPoint != null)
                         RoutePointView(
                           id: 'end_point',

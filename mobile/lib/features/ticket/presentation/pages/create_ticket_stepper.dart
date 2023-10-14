@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:vtb_map/features/ticket/presentation/view_models/create_ticket_stepper_view_model.dart';
+import 'package:vtb_map/features/ticket/domain/store/create_ticket_store.dart';
 
 class CreateTicketStepper extends StatefulWidget {
   const CreateTicketStepper({Key? key, required this.steps}) : super(key: key);
@@ -13,10 +13,12 @@ class CreateTicketStepper extends StatefulWidget {
 
 class _CreateTicketStepperState extends State<CreateTicketStepper> {
 
-  final _createTicketStepperViewModel = CreateTicketStepperViewModel();
+  final _createTicketStepperViewModel = CreateTicketStore();
 
   bool get _isFirst => _createTicketStepperViewModel.currStepIndex == 0;
   bool get _isLast => _createTicketStepperViewModel.currStepIndex == widget.steps.length - 1;
+
+
 
   @override
   Widget build(BuildContext context) {

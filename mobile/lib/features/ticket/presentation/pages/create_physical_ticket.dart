@@ -155,7 +155,7 @@ class _CreatePhysicalTicketState extends State<CreatePhysicalTicket> {
                         fontWeight: FontWeight.w500,
                       ))
                     ),
-                    onPressed: _viewModel.createTicket,
+                    onPressed: _viewModel.goChooseDepartment,
                     child: const Text('Продолжить', style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,

@@ -1,7 +1,20 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:vtb_map/features/map/domain/entities/app_location.dart';
+
+enum DepartmentWorkload{
+  danger,
+  warning,
+  good
+}
+
+extension DepartmentWorkloadIcon on DepartmentWorkload {
+  String get assetIcon => switch(this) {
+    DepartmentWorkload.danger => 'assets/icons/department_danger.png',
+    DepartmentWorkload.warning => 'assets/icons/department_warning.png',
+    DepartmentWorkload.good => 'assets/icons/department_good.png'
+  };
+}
 
 class Department {
   final String id;
@@ -10,6 +23,7 @@ class Department {
   final String? picture;
   final String title;
   final String info;
+  final int target;
 
   const Department({
     required this.id,
@@ -18,6 +32,7 @@ class Department {
     required this.picture,
     required this.title,
     required this.info,
+    required this.target
   });
 
   @override
@@ -46,6 +61,12 @@ class Department {
     return 'Department{ id: $id, point: $point, address: $address, picture: $picture, title: $title, info: $info,}';
   }
 
+  DepartmentWorkload get departmentWorkLoad {
+    if(target <= 25) return DepartmentWorkload.good;
+    if(target <= 75) return DepartmentWorkload.warning;
+    return DepartmentWorkload.danger;
+  }
+
   Department copyWith({
     String? id,
     AppLocation? point,
@@ -53,6 +74,7 @@ class Department {
     String? picture,
     String? title,
     String? info,
+    int? target
   }) {
     return Department(
       id: id ?? this.id,
@@ -61,6 +83,7 @@ class Department {
       picture: picture ?? this.picture,
       title: title ?? this.title,
       info: info ?? this.info,
+      target: target ?? this.target
     );
   }
 
@@ -72,8 +95,11 @@ class Department {
       picture: map['picture'],
       title: map['title'] as String,
       info: map['info'] as String,
+      target: map['target'] as int
     );
   }
+
+
 
   static List<Department> listFromJson(String json) => List<Department>.from(
       jsonDecode(json).map((x) => Department.fromMap(x))

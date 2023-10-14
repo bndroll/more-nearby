@@ -4,6 +4,9 @@ import 'package:mobx/mobx.dart';
 import 'package:vtb_map/core/di/locator.dart';
 import 'package:vtb_map/core/utils/utility_types/request_status.dart';
 import 'package:vtb_map/features/banks/domain/stores/tags_store.dart';
+import 'package:vtb_map/features/ticket/data/ticket_repository.dart';
+import 'package:vtb_map/features/ticket/domain/store/create_ticket_store.dart';
+import 'package:vtb_map/features/ticket/domain/use_cases/load_required_departments_use_case.dart';
 
 import '../../../../core/utils/utility_types/failure.dart';
 import '../../../banks/entities/tag.dart';
@@ -60,6 +63,7 @@ abstract class CreateTicketViewModelBase with Store{
   _CreateTicketViewModelState _state = _initialState;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  final _loadRequiredDepartmentsUseCase = LoadRequiredDepartmentUseCase();
 
   @computed
   List<Tag> get tags => locator<TagStore>().tags;
@@ -84,9 +88,10 @@ abstract class CreateTicketViewModelBase with Store{
 
   }
 
-
-  createTicket() {
-    //action
+  goChooseDepartment() async {
+    _setState(_state.copyWith(createTicketStatus: RequestStatus.loading));
+    final res = await _loadRequiredDepartmentsUseCase.execute(_state.selectedTagIds);
+    _setState(_state.copyWith(createTicketStatus: RequestStatus.successful));
   }
 
   @action

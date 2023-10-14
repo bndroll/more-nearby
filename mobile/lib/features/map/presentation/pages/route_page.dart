@@ -72,29 +72,22 @@ class _RoutePageState extends State<RoutePage>  with TickerProviderStateMixin{
 
   Future<void> _onCarRoute() async {
     if(_drivingSession != null) return;
-    (await CreateDrivingRouteUseCase().execute(CreateRoutesArgs(
+    final drivingSession = await CreateDrivingRouteUseCase().execute(CreateRoutesArgs(
         end: AppLocation(long: widget.endPlacemark.point.longitude, lat: widget.endPlacemark.point.latitude),
-        context: context
-    )))
-        .match(
-            (l) => null,
-            (r) => setState(() {
-          _drivingSession = r;
-        })
-    );
+    ));
+    setState(() {
+      _drivingSession = drivingSession;
+    });
   }
 
   Future<void> _onPedestrianRoute() async {
     if(_pedestrianSession != null) return;
-    (await CreatePedestrianUseCase().execute(CreateRoutesArgs(
+    final pedestrianSession =  await CreatePedestrianUseCase().execute(CreateRoutesArgs(
         end: AppLocation(long: widget.endPlacemark.point.longitude, lat: widget.endPlacemark.point.latitude),
-        context: context
-    ))).match(
-            (l) => null,
-            (r) => setState(() {
-              _pedestrianSession = r;
-            })
-    );
+    ));
+    setState(() {
+      _pedestrianSession = pedestrianSession;
+    });
   }
 
   @override

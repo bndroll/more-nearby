@@ -10,21 +10,19 @@ import 'package:yandex_mapkit/yandex_mapkit.dart';
 class CreateRoutesArgs {
   final AppLocation? start;
   final AppLocation end;
-  final BuildContext context;
 
   const CreateRoutesArgs({
     this.start,
     required this.end,
-    required this.context,
   });
 }
 
-class CreateDrivingRouteUseCase implements UseCase<Future<Either<Failure, DrivingResultWithSession>>, CreateRoutesArgs> {
+class CreateDrivingRouteUseCase implements UseCase<Future<DrivingResultWithSession>, CreateRoutesArgs> {
 
   final _locationService = locator<LocationService>();
 
   @override
-  Future<Either<Failure, DrivingResultWithSession>> execute(CreateRoutesArgs args) async {
+  Future<DrivingResultWithSession> execute(CreateRoutesArgs args) async {
     final startLocation = args.start ?? (await _locationService.getCurrLocation());
 
     final points = [
@@ -40,7 +38,7 @@ class CreateDrivingRouteUseCase implements UseCase<Future<Either<Failure, Drivin
           routesCount: 3,
         )
     );
-    return Right(drivingResWithSession);
+    return drivingResWithSession;
   }
 
 }
