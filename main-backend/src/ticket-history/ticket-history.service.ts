@@ -66,9 +66,9 @@ export class TicketHistoryService {
       if (item.status === TicketStatus.Closed) {
         return { ...res, closed: res.closed + 1 };
       } else if (item.status === TicketStatus.Pending) {
-        return { ...res, closed: res.pending + 1 };
+        return { ...res, pending: res.pending + 1 };
       }
-      return { ...res, closed: res.open + 1 };
+      return { ...res, open: res.open + 1 };
     }, {
       closed: 0,
       pending: 0,
@@ -79,7 +79,6 @@ export class TicketHistoryService {
       ticketCountByStatus.pending,
       ticketCountByStatus.open,
     ];
-    console.log('countByStatus =', countByStatus);
 
     let ticketHistoryItem = await this.ticketHistoryItemRepository.findByHistoryIdAndNum(dto.historyId, dto.num);
     const lastItemValues = ticketHistoryItem ? JSON.parse(ticketHistoryItem.values): [0, 0, 0];

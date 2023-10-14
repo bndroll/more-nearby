@@ -6,6 +6,7 @@ import { FindByFilterDto } from './dto/find-by-filter.dto';
 import { TagRepository } from '../tag/repositories/tag.repository';
 import { DepartmentQueueRepository } from '../department-queue/repositories/department-queue.repository';
 import { DepartmentErrorMessages } from './department.constants';
+import { FindDepartmentsWithLoadResponseDto } from './dto/find-department-load.dto';
 
 @Injectable()
 export class DepartmentService {
@@ -28,7 +29,10 @@ export class DepartmentService {
   }
 
   async findAll() {
-    return await this.departmentRepository.find();
+    const departments = await this.departmentRepository.find();
+    const num = new Date().getUTCHours() + 3;
+    const departmentLoad = await this.departmentRepository.findDepartmentLoad(num);
+    console.log('departmentLoad =', departmentLoad);
   }
 
   async findById(id: string) {
@@ -38,8 +42,6 @@ export class DepartmentService {
     }
 
     const departmentQueues = await this.departmentQueueRepository.findByDepartmentId(department.id);
-    const num = new Date().getUTCHours() + 3;
-
 
     return {
       department,
@@ -47,15 +49,23 @@ export class DepartmentService {
     };
   }
 
-  async findByFilter(query: FindByFilterDto) {
+  async findByFilter(query: FindByFilterDto): Promise<FindDepartmentsWithLoadResponseDto[]> {
+    let departments: Department[];
     if (!query.services) {
-      return await this.departmentRepository.find();
+      departments = await this.departmentRepository.find();
+    } else {
+      const types = query.services.split(',');
+      const tagIds = (await this.tagRepository.findByType(types)).map(item => item.id);
+      const departmentIds = (await this.departmentQueueRepository.findByTagIds(tagIds)).map(item => item.departmentId);
+      const uniqueDepartmentIds = Array.from(new Set(departmentIds));
+      departments = await this.departmentRepository.findByDepartmentsIds(uniqueDepartmentIds);
     }
 
-    const types = query.services.split(',');
-    const tagIds = (await this.tagRepository.findByType(types)).map(item => item.id);
-    const departmentIds = (await this.departmentQueueRepository.findByTagIds(tagIds)).map(item => item.departmentId);
-    const uniqueDepartmentIds = Array.from(new Set(departmentIds));
-    return await this.departmentRepository.findByDepartmentsIds(uniqueDepartmentIds);
+    const num = new Date().getUTCHours() + 3;
+    const departmentLoad = await this.departmentRepository.findDepartmentLoad(num);
+    return departments.map(item => ({
+      ...item,
+      target: Math.round(departmentLoad.find(dl => dl.id === item.id).avg),
+    }));
   }
 }
