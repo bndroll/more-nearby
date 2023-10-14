@@ -34,7 +34,18 @@ export class DepartmentService {
       throw new NotFoundException(DepartmentErrorMessages.NotFound);
     }
 
-    const departmentQueues = await this.departmentQueueRepository.findByDepartmentId(department.id);
+    const queuesAnalytic = await this.departmentRepository.findDepartmentQueueAnalytic(id);
+    const departmentQueues = (await this.departmentQueueRepository.findByDepartmentId(department.id))
+      .map(item => {
+        const analytic = queuesAnalytic.find(el => el.id === item.id);
+        return {
+          ...item,
+          analytic: {
+            queueCount: analytic ? parseInt(analytic.count) : 0,
+            waitingTIme: analytic ? parseInt(analytic.sum) : 0,
+          },
+        };
+      });
 
     return {
       department,

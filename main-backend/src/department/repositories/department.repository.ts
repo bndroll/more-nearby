@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, In, Repository } from 'typeorm';
 import { Department } from '../entities/department.entity';
 import { FindDepartmentLoadItemDto } from '../dto/find-department-load.dto';
+import { FindQueueAnalyticItemDto } from '../dto/find-queue-analytic.dto';
 
 @Injectable()
 export class DepartmentRepository extends Repository<Department> {
@@ -26,5 +27,15 @@ export class DepartmentRepository extends Repository<Department> {
       where thi.num = $1
       group by d.id
     `, [num]);
+  }
+
+  async findDepartmentQueueAnalytic(id: string): Promise<FindQueueAnalyticItemDto[]> {
+    return await this.query(`
+      select dq.id, sum(t."predictionTime"), count(t.id) from department d 
+      join department_queue dq on d.id = dq."departmentId" 
+      join ticket t on t."departmentQueueId" = dq.id 
+      where t.status = 'Open' and d.id = $1
+      group by dq.id
+    `, [id]);
   }
 }
