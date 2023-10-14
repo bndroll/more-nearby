@@ -10,6 +10,7 @@ import { DepartmentQueueErrorMessages } from '../department-queue/department-que
 import { Ticket, TicketAdditionallyType } from './entities/ticket.entity';
 import { DepartmentQueueService } from '../department-queue/department-queue.service';
 import { TicketErrorMessages } from './ticket.constants';
+import { CloseTicketDto, UpdateTicketAdditionalTypeDto, UpdateTicketPhilanthropyIdDto } from './dto/update-ticket.dto';
 
 @Injectable()
 export class TicketService {
@@ -77,6 +78,57 @@ export class TicketService {
   }
 
   async findUserTicket(userId: string) {
-    return await this.ticketRepository.findOpenTicketByUserId(userId);
+    const ticket = await this.ticketRepository.findOpenTicketByUserId(userId);
+
+  }
+
+  async openTicket(id: string) {
+    const ticket = await this.ticketRepository.findById(id);
+    if (!ticket) {
+      throw new NotFoundException(TicketErrorMessages.NotFound);
+    }
+    ticket.openTicket();
+    return await this.ticketRepository.save(ticket);
+  }
+
+  async closeTicket(id: string, dto: CloseTicketDto) {
+    const ticket = await this.ticketRepository.findById(id);
+    if (!ticket) {
+      throw new NotFoundException(TicketErrorMessages.NotFound);
+    }
+    ticket.closeTicket(dto.resultTime);
+    return await this.ticketRepository.save(ticket);
+  }
+
+  async updateAdditionalType(id: string, dto: UpdateTicketAdditionalTypeDto) {
+    const ticket = await this.ticketRepository.findById(id);
+    if (!ticket) {
+      throw new NotFoundException(TicketErrorMessages.NotFound);
+    }
+    const tag = await this.tagRepository.findById(ticket.tagId);
+
+    let predictionTime = ticket.predictionTime;
+    if (dto.additionalType === TicketAdditionallyType.Fast) {
+      predictionTime = Math.ceil(predictionTime - (predictionTime / 100 * 5));
+    } else if (dto.additionalType === TicketAdditionallyType.Hard) {
+      predictionTime = Math.ceil(predictionTime + (predictionTime / 100 * 15));
+    } else {
+      predictionTime = tag.time;
+    }
+
+    ticket.updateAdditionallyType({
+      additionalType: dto.additionalType,
+      predictionTime: predictionTime,
+    });
+    return await this.ticketRepository.save(ticket);
+  }
+
+  async updatePhilanthropyId(id: string, dto: UpdateTicketPhilanthropyIdDto) {
+    const ticket = await this.ticketRepository.findById(id);
+    if (!ticket) {
+      throw new NotFoundException(TicketErrorMessages.NotFound);
+    }
+    ticket.updatePhilanthropyId(dto.philanthropyId);
+    return await this.ticketRepository.save(ticket);
   }
 }

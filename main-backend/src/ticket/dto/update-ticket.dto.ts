@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { TicketAdditionallyType } from '../entities/ticket.entity';
 
 export class CloseTicketDto {
   @IsNotEmpty()
@@ -6,14 +7,19 @@ export class CloseTicketDto {
   resultTime: number;
 }
 
-export class UpdateTicketPredictionTimeDto {
+export class UpdateTicketAdditionalTypeDto {
   @IsNotEmpty()
-  @IsNumber()
-  predictionTime: number;
+  @IsEnum(TicketAdditionallyType)
+  additionalType: TicketAdditionallyType;
 }
 
 export class UpdateTicketPhilanthropyIdDto {
   @IsNotEmpty()
   @IsString()
   philanthropyId: string;
+}
+
+export class UpdateTicketAdditionalTypeEntityDto {
+  additionalType: TicketAdditionallyType;
+  predictionTime: number;
 }

@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 import { generateString } from '@nestjs/typeorm';
 import { CreateTicketEntityDto } from '../dto/create-ticket.dto';
+import { UpdateTicketAdditionalTypeEntityDto } from '../dto/update-ticket.dto';
 
 export enum TicketStatus {
   Pending = 'Pending',
@@ -55,6 +56,9 @@ export class Ticket {
   @Column('date')
   visitDate: Date;
 
+  @Column('date', { nullable: true })
+  openDate: Date | null;
+
   @CreateDateColumn()
   createdDate: Date;
 
@@ -66,6 +70,7 @@ export class Ticket {
     instance.request = dto.request;
     instance.predictionTime = dto.predictionTime;
     instance.status = dto.status;
+    instance.openDate = dto.status === TicketStatus.Open ? new Date() : null;
     instance.additionallyType = dto.additionallyType;
     instance.userId = dto.userId;
     instance.tagId = dto.tagId;
@@ -80,6 +85,7 @@ export class Ticket {
 
   openTicket() {
     this.status = TicketStatus.Open;
+    this.openDate = new Date();
   }
 
   closeTicket(resultTime: number) {
@@ -87,7 +93,8 @@ export class Ticket {
     this.status = TicketStatus.Closed;
   }
 
-  updatePredictionTime(time: number) {
-    this.predictionTime = time;
+  updateAdditionallyType(dto: UpdateTicketAdditionalTypeEntityDto) {
+    this.additionallyType = dto.additionalType;
+    this.predictionTime = dto.predictionTime;
   }
 }
