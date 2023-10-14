@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { getDepartments } from "../api/api";
 import { useDebounce } from "react-use";
 import { SelectedDep } from "./SelectedDep";
+import { DepartmentItemSmall } from "./common/DepartmentItemSmall";
+import { UIChip } from "./common/UIChip";
 
 export const SideBar = ({ onLoadDeps, selectedDep, onSelect }) => {
   const [filters, setFilters] = useState([]);
@@ -47,33 +49,20 @@ export const SideBar = ({ onLoadDeps, selectedDep, onSelect }) => {
           {servicesList.map((item, index) => {
             const checked = filters.includes(item.type);
             return (
-              <Chip
+              <UIChip
                 key={index}
-                variant="soft"
-                sx={{ mr: 1, mb: 1 }}
-                color={checked ? "primary" : "neutral"}
-                size="md"
-              >
-                <Checkbox
-                  variant="solid"
-                  label={item.title}
-                  disableIcon
-                  overlay
-                  checked={checked}
-                  onChange={(e) => {
-                    setFilters((prev) =>
-                      !e.target.checked
-                        ? prev.filter((n) => n !== item.type)
-                        : [...prev, item.type]
-                    );
-                  }}
-                  sx={{
-                    color: checked ? "white" : "#0C277D",
-                    fontSize: "14px",
-                    fontWeight: 400,
-                  }}
-                />
-              </Chip>
+                label={item.title}
+                checkedColor="white"
+                uncheckedColor="#0C277D"
+                checked={checked}
+                onChange={(e) => {
+                  setFilters((prev) =>
+                    !e.target.checked
+                      ? prev.filter((n) => n !== item.type)
+                      : [...prev, item.type]
+                  );
+                }}
+              />
             );
           })}
         </div>
@@ -109,30 +98,10 @@ export const SideBar = ({ onLoadDeps, selectedDep, onSelect }) => {
                   }}
                   className="department-item-small"
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "start",
-                      cursor: "pointer",
-                    }}
+                  <DepartmentItemSmall
+                    item={item}
                     onClick={() => onSelect(item)}
-                  >
-                    <div
-                      style={{
-                        borderRadius: "50%",
-                        width: "34px",
-                        height: "34px",
-                        backgroundColor: "#F0F4F8",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginRight: "8px",
-                      }}
-                    >
-                      <img src="/src/assets/VTB_logo_ru.png" width="40" />
-                    </div>
-                    <Typography level="body-md">{item.address}</Typography>
-                  </div>
+                  />
                   <div style={{ marginTop: "16px" }}>
                     <Button
                       size="sm"

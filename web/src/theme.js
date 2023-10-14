@@ -14,6 +14,9 @@ export const appTheme = extendTheme({
           solidHoverBg: "#DDE7EE",
           solidActiveBg: "#F0F4F8",
         },
+        danger: {
+          solidBg: "#C41C1C",
+        },
       },
     },
     dark: {
