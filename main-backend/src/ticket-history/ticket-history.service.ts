@@ -79,9 +79,10 @@ export class TicketHistoryService {
       ticketCountByStatus.pending,
       ticketCountByStatus.open,
     ];
+    console.log('countByStatus =', countByStatus);
 
     let ticketHistoryItem = await this.ticketHistoryItemRepository.findByHistoryIdAndNum(dto.historyId, dto.num);
-    const lastItemValues = ticketHistoryItem ? [0, 0, 0] : JSON.parse(ticketHistoryItem.values);
+    const lastItemValues = ticketHistoryItem ? JSON.parse(ticketHistoryItem.values): [0, 0, 0];
     const target = Math.round(
       (countByStatus[0] - lastItemValues[0]) +
       (countByStatus[1] * 0.3) +
@@ -96,18 +97,13 @@ export class TicketHistoryService {
       averageTicketsByDayCount += itemValues[0];
     }
     averageTicketsByDayCount = Math.round(averageTicketsByDayCount / lastHistoryIds.length);
+    if (averageTicketsByDayCount === 0) {
+      averageTicketsByDayCount = 20;
+    }
 
     return {
       target: target >= averageTicketsByDayCount ? 100 : Math.round(target * 100 / averageTicketsByDayCount),
       countByStatus: countByStatus,
     };
-  }
-
-  async getOldTargetValue() {
-
-  }
-
-  async getFutureTargetValue() {
-
   }
 }

@@ -34,7 +34,7 @@ export class GenerateHistoryCron {
       const historyItemAnalytic = await this.ticketHistoryService.generateHistoryItemAnalytic({
         historyId: history.id,
         departmentQueueId: history.departmentQueueId,
-        num: num - 1,
+        num: num,
       });
 
       await this.ticketHistoryService.createHistoryItem({
