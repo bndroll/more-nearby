@@ -21,7 +21,7 @@ services:
     container_name: more-nearby-mongo
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - ":27017"
     volumes:
       - './data/mongo:/data/db'
     networks:
