@@ -46,4 +46,10 @@ export class TicketController {
   async updatePhilanthropyId(@Param('id') id: string, @Body() dto: UpdateTicketPhilanthropyIdDto) {
     return this.ticketService.updatePhilanthropyId(id, dto);
   }
+
+  @Patch('close/by-user-id/:id')
+  @UseGuards(AdminGuard)
+  async closeAllByUserId(@Param('id') userId: string) {
+    return this.ticketService.closeAllByUserId(userId);
+  }
 }

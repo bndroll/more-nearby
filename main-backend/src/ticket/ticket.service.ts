@@ -149,4 +149,12 @@ export class TicketService {
     ticket.updatePhilanthropyId(dto.philanthropyId);
     return await this.ticketRepository.save(ticket);
   }
+
+  async closeAllByUserId(userId: string) {
+    const tickets = await this.ticketRepository.findByUserId(userId);
+    for (const ticket of tickets) {
+      ticket.closeTicket(ticket.predictionTime);
+    }
+    return await this.ticketRepository.save(tickets);
+  }
 }

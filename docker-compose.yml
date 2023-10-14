@@ -24,6 +24,8 @@ services:
       - "27017:27017"
     volumes:
       - "./data/mongo:/data/db"
+    networks:
+      - network
 
   server:
     build:
@@ -42,12 +44,24 @@ services:
     build:
       context: .
       dockerfile: ./web/DockerFile
-      restart: unless-stopped
-      container_name: more-nearby-web
-      ports:
-        - "3000:3000"
-      network:
-        - network
+    restart: unless-stopped
+    container_name: more-nearby-web
+    ports:
+      - "3000:3000"
+    network:
+      - network
+
+  emulator:
+    build:
+      context: .
+      dockerfile: ./emulator/Dockerfile
+    restart: unless-stopped
+    container_name: more-nearby-emulator
+    depends_on:
+      - mongo
+    networks:
+      - network
+
 networks:
   network:
     driver: bridge

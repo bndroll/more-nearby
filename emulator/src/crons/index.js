@@ -14,7 +14,7 @@ function initUpdateBalanceCron() {
     cron.schedule( "*/5 * * * *", async () => {
         const machines = await CashMachine.find();
         for (const machine of machines) {
-            const {data} = await API.cashMachineApi.updateBalance(
+            await API.cashMachineApi.updateBalance(
                 machine._doc.cashMachineId,
                 100000
             )
@@ -24,8 +24,6 @@ function initUpdateBalanceCron() {
             }, {
                 amountOfMoney: machine._doc.amountOfMoney + 100000
             })
-
-            logger.info("hui")
         }
     })
 }

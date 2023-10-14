@@ -5,6 +5,7 @@ import { DepartmentRepository } from './repositories/department.repository';
 import { FindByFilterDto } from './dto/find-by-filter.dto';
 import { TagRepository } from '../tag/repositories/tag.repository';
 import { DepartmentQueueRepository } from '../department-queue/repositories/department-queue.repository';
+import { DepartmentErrorMessages } from './department.constants';
 
 @Injectable()
 export class DepartmentService {
@@ -33,10 +34,17 @@ export class DepartmentService {
   async findById(id: string) {
     const department = await this.departmentRepository.findById(id);
     if (!department) {
-      throw new NotFoundException();
+      throw new NotFoundException(DepartmentErrorMessages.NotFound);
     }
 
-    return department;
+    const departmentQueues = await this.departmentQueueRepository.findByDepartmentId(department.id);
+    const num = new Date().getUTCHours() + 3;
+
+
+    return {
+      department,
+      queues: departmentQueues,
+    };
   }
 
   async findByFilter(query: FindByFilterDto) {
