@@ -7,7 +7,12 @@ import { SelectedDep } from "./SelectedDep";
 import { DepartmentItemSmall } from "./common/DepartmentItemSmall";
 import { UIChip } from "./common/UIChip";
 
-export const SideBar = ({ onLoadDeps, selectedDep, onSelect }) => {
+export const SideBar = ({
+  onLoadDeps,
+  selectedDep,
+  onSelect,
+  createTicket,
+}) => {
   const [filters, setFilters] = useState([]);
   const [departments, setDepartments] = useState([]);
 
@@ -82,6 +87,7 @@ export const SideBar = ({ onLoadDeps, selectedDep, onSelect }) => {
           <SelectedDep
             selectedDep={selectedDep}
             onSelect={(item) => onSelect(item)}
+            createTicket={() => createTicket()}
           />
         ) : (
           <div>
@@ -112,7 +118,12 @@ export const SideBar = ({ onLoadDeps, selectedDep, onSelect }) => {
                         Оформить заявку
                       </Typography>
                     </Button>
-                    <Button size="sm" variant="soft" sx={{ borderRadius: 10 }}>
+                    <Button
+                      size="sm"
+                      variant="soft"
+                      sx={{ borderRadius: 10 }}
+                      onClick={() => onSelect(item)}
+                    >
                       <Typography level="body-xs">Об отделении</Typography>
                     </Button>
                   </div>

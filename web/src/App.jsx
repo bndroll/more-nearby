@@ -42,6 +42,7 @@ const App = () => {
             <CreateTicket finish={() => setCreateTicketInProgress(false)} />
           ) : (
             <SideBar
+              createTicket={() => setCreateTicketInProgress(true)}
               onLoadDeps={(deps) => setDepartments(deps)}
               selectedDep={selectedDep}
               onSelect={(dep) => setSelectedDep(dep)}
