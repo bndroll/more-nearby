@@ -40,6 +40,10 @@ export class DepartmentService {
   }
 
   async findByFilter(query: FindByFilterDto) {
+    if (!query.services) {
+      return await this.departmentRepository.find();
+    }
+
     const types = query.services.split(',');
     const tagIds = (await this.tagRepository.findByType(types)).map(item => item.id);
     const departmentIds = (await this.departmentQueueRepository.findByTagIds(tagIds)).map(item => item.departmentId);

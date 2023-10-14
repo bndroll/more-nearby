@@ -1,3 +1,6 @@
+import { IsOptional } from 'class-validator';
+
 export class FindByFilterDto {
-  services: string;
+  @IsOptional()
+  services?: string;
 }

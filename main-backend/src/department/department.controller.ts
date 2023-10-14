@@ -15,17 +15,12 @@ export class DepartmentController {
   }
 
   @Get()
-  async findAll() {
-    return await this.departmentService.findAll();
+  async findAll(@Query() query: FindByFilterDto) {
+    return await this.departmentService.findByFilter(query);
   }
 
   @Get(':id')
   async findById(@Param('id') id: string) {
     return await this.departmentService.findById(id);
-  }
-
-  @Get('find/by-filter')
-  async findByFilter(@Query() query: FindByFilterDto) {
-    return await this.departmentService.findByFilter(query);
   }
 }
