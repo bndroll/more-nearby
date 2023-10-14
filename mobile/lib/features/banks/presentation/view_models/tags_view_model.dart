@@ -73,12 +73,15 @@ abstract class TagsViewModelBase with Store{
   }
 
   selectTag(String tagId) {
-    debugPrint('TAP TAG');
-    if(_state.selectedTagsIds.where((sTagId) => sTagId == tagId).isNotEmpty) {
-      _setState(_state.copyWith(selectedTagsIds: _state.selectedTagsIds.filter((sTagId) => sTagId != tagId).toList()));
+    final isSecondary = _state.selectedTagsIds.where((stagId) => stagId == tagId).isNotEmpty;
+    if(isSecondary) {
+      _setState(_state.copyWith(selectedTagsIds: _state.selectedTagsIds
+          .filter((t) => t != tagId)
+          .toList())
+      );
     }
     else {
-      _state.copyWith(selectedTagsIds: [..._state.selectedTagsIds, tagId]);
+      _setState(_state.copyWith(selectedTagsIds: [tagId, ...selectedTagsIds]));
     }
   }
 

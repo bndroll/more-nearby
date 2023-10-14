@@ -6,23 +6,23 @@ class RoutePointView extends PlacemarkMapObject {
 
   final String id;
   final AppLocation location;
-  // final void Function(PlacemarkMapObject) onDragEnded;
+  final bool isEndMark;
 
   factory RoutePointView({
     required String id,
     required AppLocation location,
+    required bool isEndMark
     // required void Function(PlacemarkMapObject) onDragEnded
   }) => RoutePointView._(
     id,
     location,
-    // onDragEnded,
-    // onDragEnd: onDragEnded,
+    isEndMark,
     mapId: MapObjectId(id),
     isDraggable: true,
     point: Point(longitude: location.long, latitude: location.lat),
     icon: PlacemarkIcon.single(
         PlacemarkIconStyle(
-            image: BitmapDescriptor.fromAssetImage('assets/icons/route_end.png')
+            image: BitmapDescriptor.fromAssetImage(isEndMark ? 'assets/icons/bank_placemark.png' : 'assets/icons/route_start.png')
         )
     )
   );
@@ -30,6 +30,7 @@ class RoutePointView extends PlacemarkMapObject {
   const RoutePointView._(
       this.id,
       this.location,
+      this.isEndMark,
       // this.onDragEnded,
       {
         required super.mapId,

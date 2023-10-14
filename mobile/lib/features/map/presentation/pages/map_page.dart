@@ -10,6 +10,7 @@ import 'package:vtb_map/core/di/locator.dart';
 import 'package:vtb_map/core/presentation/bottom_sheet/domain/show_default_bottom_sheet.dart';
 import 'package:vtb_map/core/presentation/bottom_sheet/presentation/default_bottom_sheet_header.dart';
 import 'package:vtb_map/core/routing/routes_path.dart';
+import 'package:vtb_map/features/banks/presentation/pages/cash_machine_info_page.dart';
 import 'package:vtb_map/features/banks/presentation/pages/departments_events_modal_page.dart';
 import 'package:vtb_map/features/banks/presentation/pages/filter_departments_page.dart';
 import 'package:vtb_map/features/banks/presentation/widgets/cash_machine_view.dart';
@@ -86,9 +87,10 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver, TickerPr
     if (pEnd == null) return;
     final startLocation = _useLocation;
     context.beamToNamed(routeSession, data: [
-      RoutePointView(id: 'start_placemark', location: startLocation),
+      RoutePointView(id: 'start_placemark', location: startLocation, isEndMark: false),
       RoutePointView(
           id: 'end_point',
+          isEndMark: true,
           location: AppLocation(long: pEnd.longitude, lat: pEnd.latitude))
     ]);
   }
@@ -112,10 +114,17 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver, TickerPr
             context, [
           DepartmentInfoPage(
               department: _viewModel.departments.firstWhere((element) =>
-              element
-                  .id == departmentId))
+              element.id == departmentId))
         ]);
       };
+  _buildOnCashMachineTap(String cashMachineId, BuildContext context) => () {
+    showDefaultBottomSheet(
+        context, [
+      CashMachineInfoPage(
+          cashMachine: _viewModel.cashMachines.firstWhere((element) =>
+          element.id == cashMachineId))
+    ]);
+  };
 
   Future<UserLocationView> onUserLocationAdded(UserLocationView view) async {
     return view.copyWith(
@@ -184,7 +193,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver, TickerPr
                           departmentId: m.id,
                           cashMachineType: m.type,
                           location: m.location,
-                          onTap: (){}
+                          onTap: _buildOnCashMachineTap(m.id, context)
                       )),
                       if(!_viewModel.isShowCashMachines) ..._viewModel.departments.map((d) =>
                           DepartmentView(
@@ -194,6 +203,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver, TickerPr
                       if (endPoint != null)
                         RoutePointView(
                           id: 'end_point',
+                          isEndMark: true,
                           location: AppLocation(
                               lat: endPoint?.latitude ?? 0,
                               long: endPoint?.longitude ?? 0),

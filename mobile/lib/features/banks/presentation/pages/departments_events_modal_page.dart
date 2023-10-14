@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vtb_map/features/ticket/presentation/pages/create_physical_ticket.dart';
 
 import '../../../../core/presentation/bottom_sheet/presentation/default_bottom_sheet_header.dart';
 import 'filter_departments_page.dart';
@@ -48,9 +49,11 @@ class _DepartmentEventModalPageState extends State<DepartmentEventModalPage> {
             child: Column(
               children: [
                 const SizedBox(height: 40, child: DefaultBottomSheetHeader()),
-                Builder(builder: (_) => selectedEvent == '0'
-                    ? const FilterDepartmentsPage()
-                    : const Text('В разработке')
+                SingleChildScrollView(
+                  child: Builder(builder: (_) => selectedEvent == '0'
+                      ? const FilterDepartmentsPage()
+                      : const CreatePhysicalTicket()
+                  ),
                 ),
                 const SizedBox(height: 10,)
               ],
