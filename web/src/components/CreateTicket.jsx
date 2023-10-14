@@ -57,6 +57,7 @@ export const CreateTicket = ({ finish }) => {
   const [transport, setTransport] = useState("");
   const [reminder, setReminder] = useState("");
   const [showFinal, setShowFinal] = useState(false);
+  const [ticketNumber, setSticketNumber] = useState("");
 
   const moveBack = useCallback(() => {
     if (step === 1) {
@@ -71,6 +72,7 @@ export const CreateTicket = ({ finish }) => {
     if (step === 3) {
       const res = await create();
       if (res.status === 201) {
+        setSticketNumber(res.data.title);
         setShowFinal(true);
       }
       return;
@@ -557,6 +559,18 @@ export const CreateTicket = ({ finish }) => {
                   </Typography>
                   <Typography level="body-sm">50 рублей</Typography>
                 </div>
+              </div>
+              <Divider sx={{ my: 1 }} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "150px",
+                }}
+              >
+                <Typography level="h1" sx={{ fontSize: "72px" }}>
+                  {ticketNumber}
+                </Typography>
               </div>
             </div>
           </>
