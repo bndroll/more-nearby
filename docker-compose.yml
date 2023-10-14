@@ -59,7 +59,7 @@ services:
     container_name: more-nearby-emulator
     depends_on:
       - mongo
-    network:
+    networks:
       - network
 
 networks:
