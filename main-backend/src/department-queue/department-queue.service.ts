@@ -1,4 +1,4 @@
-import { BadGatewayException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDepartmentQueueDto } from './dto/create-department-queue.dto';
 import { DepartmentQueueRepository } from './repositories/department-queue.repository';
 import { DepartmentQueueErrorMessages } from './department-queue.constants';

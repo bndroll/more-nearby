@@ -28,13 +28,6 @@ export class DepartmentService {
     return await this.departmentRepository.save(department);
   }
 
-  async findAll() {
-    const departments = await this.departmentRepository.find();
-    const num = new Date().getUTCHours() + 3;
-    const departmentLoad = await this.departmentRepository.findDepartmentLoad(num);
-    console.log('departmentLoad =', departmentLoad);
-  }
-
   async findById(id: string) {
     const department = await this.departmentRepository.findById(id);
     if (!department) {
@@ -61,8 +54,14 @@ export class DepartmentService {
       departments = await this.departmentRepository.findByDepartmentsIds(uniqueDepartmentIds);
     }
 
-    const num = new Date().getUTCHours() + 3;
-    const departmentLoad = await this.departmentRepository.findDepartmentLoad(num);
+    let currentNum = new Date().getUTCHours() + 3;
+    if (currentNum > 21) {
+      currentNum = 21;
+    }
+    if (currentNum < 9) {
+      currentNum = 9;
+    }
+    const departmentLoad = await this.departmentRepository.findDepartmentLoad(currentNum);
     return departments.map(item => ({
       ...item,
       target: Math.round(departmentLoad.find(dl => dl.id === item.id).avg),
