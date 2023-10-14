@@ -10,6 +10,12 @@ export class Tag {
   @Column('varchar')
   title: string;
 
+  @Column('varchar')
+  prefix: string;
+
+  @Column('varchar')
+  type: string;
+
   @Column('integer')
   time: number;
 
@@ -17,6 +23,8 @@ export class Tag {
     const instance = new Tag();
     instance.id = generateString();
     instance.title = dto.title;
+    instance.prefix = dto.prefix;
+    instance.type = dto.type;
     instance.time = dto.time;
     return instance;
   }

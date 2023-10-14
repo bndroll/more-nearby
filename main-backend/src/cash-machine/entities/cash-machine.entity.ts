@@ -25,9 +25,9 @@ export class CashMachine {
   type: CashMachineType;
 
   @Column('varchar', { nullable: true })
-  info: string;
+  info: string | null;
 
-  @Column('bigint')
+  @Column('integer', { default: 0 })
   balance: number;
 
   static create(dto: CreateCashMachineEntityDto) {

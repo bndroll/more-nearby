@@ -15,4 +15,8 @@ export class PhilanthropyService {
     });
     return await this.philanthropyHistoryRepository.save(philanthropy);
   }
+
+  async findAll() {
+    return await this.philanthropyHistoryRepository.find();
+  }
 }

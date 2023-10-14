@@ -1,4 +1,18 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+ul#tags-default-listbox {
+  border-radius: 2px !important;
+}
+.department-item-small {
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.department-item-small:hover {
+  border: 1px solid #cdd7e1;
+  border-radius: 8px;
 }

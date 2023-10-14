@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCashMachineDto } from './dto/create-cash-machine.dto';
 import { CashMachineRepository } from './repositories/cash-machine.repository';
 import { CashMachineHistoryRepository } from './repositories/cash-machine-history.repository';
@@ -10,6 +10,9 @@ import {
   CashMachineHistoryOperation,
   CashMachineHistoryStatus,
 } from './entities/cash-machine-history.entity';
+import { UserErrorMessages } from '../user/user.constants';
+import { CashMachineErrorMessages } from './cash-machine.constants';
+import { UpdateBalanceForce } from './dto/update-cash-machine.dto';
 
 @Injectable()
 export class CashMachineService {
@@ -36,7 +39,21 @@ export class CashMachineService {
   }
 
   async findHistoryByMachineId(machineId: string) {
+    const machine = await this.cashMachineRepository.findById(machineId);
+    if (!machine) {
+      throw new NotFoundException(CashMachineErrorMessages.NotFound);
+    }
+
     return await this.cashMachineHistoryRepository.findByMachineId(machineId);
+  }
+
+  async updateBalanceForce(dto: UpdateBalanceForce) {
+    const machine = await this.cashMachineRepository.findById(dto.cashMachineId);
+    if (!machine) {
+      throw new NotFoundException(CashMachineErrorMessages.NotFound);
+    }
+    machine.updateBalance(dto.balance);
+    return await this.cashMachineRepository.save(machine);
   }
 
   async updateBalance(dto: CreateCashMachineHistoryDto) {
@@ -46,12 +63,12 @@ export class CashMachineService {
 
     const user = await this.userRepository.findById(dto.userId);
     if (!user) {
-      throw new BadRequestException();
+      throw new NotFoundException(UserErrorMessages.NotFound);
     }
 
     const machine = await this.cashMachineRepository.findById(dto.cashMachineId);
     if (!machine) {
-      throw new BadRequestException();
+      throw new NotFoundException(CashMachineErrorMessages.NotFound);
     }
 
     if (dto.operation === CashMachineHistoryOperation.Fill) {

@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   postgres:
     image: "postgres:15-alpine"
@@ -16,6 +16,17 @@ services:
     networks:
       - network
 
+  mongo:
+    image: mongo
+    container_name: more-nearby-mongo
+    restart: unless-stopped
+    ports:
+      - ":27017"
+    volumes:
+      - "./data/mongo:/data/db"
+    networks:
+      - network
+
   server:
     build:
       context: .
@@ -26,6 +37,30 @@ services:
       - postgres
     ports:
       - "8080:8080"
+    networks:
+      - network
+
+  emulator:
+    build:
+      context: .
+      dockerfile: ./emulator/Dockerfile
+    restart: unless-stopped
+    container_name: more-nearby-emulator
+    depends_on:
+      - mongo
+    networks:
+      - network
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    restart: unless-stopped
+    container_name: more-nearby-web
+    ports:
+      - "3000:3000"
+    env_file:
+      - web/.env
     networks:
       - network
 
