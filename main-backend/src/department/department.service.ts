@@ -38,6 +38,8 @@ export class DepartmentService {
     }
 
     const departmentQueues = await this.departmentQueueRepository.findByDepartmentId(department.id);
+    const num = new Date().getUTCHours() + 3;
+
 
     return {
       department,

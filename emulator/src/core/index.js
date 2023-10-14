@@ -135,7 +135,7 @@ async function makeRandomUserAction(user) {
         agendaProps
     ))
     agenda.schedule(
-        `in ${time} seconds`,
+        `in ${time} minutes`,
         makeUserFree.jobName,
         agendaProps
     );
