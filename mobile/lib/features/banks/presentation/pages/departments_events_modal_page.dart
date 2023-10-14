@@ -50,7 +50,7 @@ class _DepartmentEventModalPageState extends State<DepartmentEventModalPage> {
                 const SizedBox(height: 40, child: DefaultBottomSheetHeader()),
                 Builder(builder: (_) => selectedEvent == '0'
                     ? const FilterDepartmentsPage()
-                    : const Text('HUI')
+                    : const Text('В разработке')
                 ),
                 const SizedBox(height: 10,)
               ],

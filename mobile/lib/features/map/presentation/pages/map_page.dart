@@ -16,6 +16,7 @@ import 'package:vtb_map/features/banks/presentation/widgets/department_view.dart
 import 'package:vtb_map/features/map/domain/entities/app_location.dart';
 import 'package:vtb_map/features/map/domain/services/location_service.dart';
 import 'package:vtb_map/features/map/domain/use_cases/create_driving_route_use_case.dart';
+import 'package:vtb_map/features/map/domain/use_cases/get_current_user_location_use_case.dart';
 import 'package:vtb_map/features/map/domain/utils/yandex_map_helper.dart';
 import 'package:vtb_map/features/banks/presentation/pages/department_info_page.dart';
 import 'package:vtb_map/features/map/presentation/pages/route_page.dart';
@@ -58,8 +59,11 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
 
 
   onCursorTap() async {
-    final location = await _locationService.getCurrLocation();
-    _yMapHelper.moveToCurrentLocation(location);
+    (await locator<GetCurrentUserLocationUseCase>().execute(null))
+        .match(
+            (l) => null,
+            (r) => _yMapHelper.moveToCurrentLocation(r.value ?? const MoscowLocation())
+    );
   }
 
   @override
