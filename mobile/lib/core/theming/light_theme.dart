@@ -36,7 +36,7 @@ final lightTheme = ThemeData.light(useMaterial3: true).copyWith(
         ),
         shadowColor: MaterialStatePropertyAll(Colors.transparent),
         elevation: MaterialStatePropertyAll(0),
-        shape: MaterialStatePropertyAll(BeveledRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))))
+        shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))))
       )
     )
   );

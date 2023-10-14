@@ -16,6 +16,20 @@ mixin _$CreateTicketStore on CreateTicketStoreBase, Store {
       (_$currStepIndexComputed ??= Computed<int>(() => super.currStepIndex,
               name: 'CreateTicketStoreBase.currStepIndex'))
           .value;
+  Computed<List<DepartmentWithTimes>>? _$departmentsComputed;
+
+  @override
+  List<DepartmentWithTimes> get departments => (_$departmentsComputed ??=
+          Computed<List<DepartmentWithTimes>>(() => super.departments,
+              name: 'CreateTicketStoreBase.departments'))
+      .value;
+  Computed<String>? _$selectedDepartmentIdComputed;
+
+  @override
+  String get selectedDepartmentId => (_$selectedDepartmentIdComputed ??=
+          Computed<String>(() => super.selectedDepartmentId,
+              name: 'CreateTicketStoreBase.selectedDepartmentId'))
+      .value;
 
   late final _$_stateAtom =
       Atom(name: 'CreateTicketStoreBase._state', context: context);
@@ -50,7 +64,9 @@ mixin _$CreateTicketStore on CreateTicketStoreBase, Store {
   @override
   String toString() {
     return '''
-currStepIndex: ${currStepIndex}
+currStepIndex: ${currStepIndex},
+departments: ${departments},
+selectedDepartmentId: ${selectedDepartmentId}
     ''';
   }
 }

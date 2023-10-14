@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vtb_map/features/ticket/presentation/pages/choose_department_step.dart';
 import 'package:vtb_map/features/ticket/presentation/pages/create_physical_ticket.dart';
 import 'package:vtb_map/features/ticket/presentation/pages/create_ticket_stepper.dart';
 
@@ -53,7 +54,10 @@ class _DepartmentEventModalPageState extends State<DepartmentEventModalPage> {
                 SingleChildScrollView(
                   child: Builder(builder: (_) => selectedEvent == '0'
                       ? const FilterDepartmentsPage()
-                      : const CreatePhysicalTicket()
+                      : CreateTicketStepper(steps: const [
+                        CreatePhysicalTicket(),
+                        ChooseDepartmentStep()
+                  ])
                   ),
                 ),
                 const SizedBox(height: 10,)

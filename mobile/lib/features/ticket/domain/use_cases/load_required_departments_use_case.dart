@@ -67,8 +67,9 @@ class LoadRequiredDepartmentUseCase
           pedestrianTimeText: shortestTimePedestrianRoute?.text ?? '',
           pedestrianTime: shortestTimePedestrianRoute?.value ?? 0);
     }).toList();
-
+    debugPrint('---ALL LOADED---');
     _createTicketStore.updateStepper(requiredDeps: departmentsWithTimes);
+    _createTicketStore.setStepIndex(_createTicketStore.currStepIndex + 1);
     return Right(departmentsWithTimes);
   }
 }

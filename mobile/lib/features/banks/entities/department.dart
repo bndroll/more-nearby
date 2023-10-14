@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:vtb_map/features/map/domain/entities/app_location.dart';
 
@@ -13,6 +14,12 @@ extension DepartmentWorkloadIcon on DepartmentWorkload {
     DepartmentWorkload.danger => 'assets/icons/department_danger.png',
     DepartmentWorkload.warning => 'assets/icons/department_warning.png',
     DepartmentWorkload.good => 'assets/icons/department_good.png'
+  };
+
+  Color get color => switch(this) {
+    DepartmentWorkload.danger => const Color(0xFFC41C1C),
+    DepartmentWorkload.warning => const Color(0xFFD37306),
+    DepartmentWorkload.good =>  const Color(0xFF259125)
   };
 }
 

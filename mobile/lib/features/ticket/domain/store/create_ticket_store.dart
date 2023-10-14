@@ -72,8 +72,15 @@ abstract class CreateTicketStoreBase with Store {
     _setState(_state.copyWith(requiredDeps: requiredDeps, chosenDepId: chosenDepId, timeToSetInQueue: timeToSetInQueuee));
   }
 
+  setStepIndex(int stepIndex) => _setState(_state.copyWith(currStepIndex: stepIndex));
+
   @computed
   int get currStepIndex => _state.currStepIndex;
+  @computed
+  List<DepartmentWithTimes> get departments => _state.requiredDeps ?? [];
+  @computed
+  String get selectedDepartmentId => _state.chosenDepId ?? '0';
+
 
   @action
   _setState(_CreateTicketStepperViewModelState state) {
