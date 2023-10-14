@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { Department } from '../entities/department.entity';
 
 @Injectable()
@@ -10,5 +10,9 @@ export class DepartmentRepository extends Repository<Department> {
 
   async findById(id: string) {
     return await this.findOneBy({ id });
+  }
+
+  async findByDepartmentsIds(ids: string[]) {
+    return await this.findBy({ id: In(ids) });
   }
 }

@@ -43,6 +43,7 @@ export class DepartmentService {
     const types = query.services.split(',');
     const tagIds = (await this.tagRepository.findByType(types)).map(item => item.id);
     const departmentIds = (await this.departmentQueueRepository.findByTagIds(tagIds)).map(item => item.departmentId);
-    return Array.from(new Set(departmentIds));
+    const uniqueDepartmentIds = Array.from(new Set(departmentIds));
+    return await this.departmentRepository.findByDepartmentsIds(uniqueDepartmentIds);
   }
 }
