@@ -48,6 +48,7 @@ class _RoutePageState extends State<RoutePage>  with TickerProviderStateMixin{
   }
 
   _handleRoute() {
+    debugPrint('handle route');
     if(_tabController.index == 0) {
       _onCarRoute().then((value) => _initDriving());
     }
@@ -98,66 +99,64 @@ class _RoutePageState extends State<RoutePage>  with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: Theme
-                .of(context)
-                .colorScheme
-                .background,
-            flexibleSpace: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .secondaryContainer,
-                      borderRadius: const BorderRadius.all(
-                          Radius.circular((10)))),
-                  child: TabBar(
-                    padding: const EdgeInsets.all(5),
-                    dividerColor: Colors.transparent,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular((10))),
-                        color: Colors.white),
-                    unselectedLabelColor: Colors.black,
-                    labelColor: Theme
+    return Scaffold(
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Theme
+              .of(context)
+              .colorScheme
+              .background,
+          flexibleSpace: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Theme
                         .of(context)
                         .colorScheme
-                        .primary,
-                    tabs: const [
-                      Tab(icon: Icon(Icons.drive_eta),),
-                      Tab(icon: Icon(Icons.man),)
-                    ],
-                  ),
+                        .secondaryContainer,
+                    borderRadius: const BorderRadius.all(
+                        Radius.circular((10)))),
+                child: TabBar(
+                  controller: _tabController,
+                  padding: const EdgeInsets.all(5),
+                  dividerColor: Colors.transparent,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular((10))),
+                      color: Colors.white),
+                  unselectedLabelColor: Colors.black,
+                  labelColor: Theme
+                      .of(context)
+                      .colorScheme
+                      .primary,
+                  tabs: const [
+                    Tab(icon: Icon(Icons.drive_eta),),
+                    Tab(icon: Icon(Icons.man),)
+                  ],
                 ),
               ),
-            )),
-          body: Stack(
-            children: [
-              YandexMap(
-                onMapCreated: onCreateMap,
-                mapObjects: [
-                  ...mapObjects,
-                  widget.startPlacemark,
-                  widget.endPlacemark
-                ]
             ),
-              FutureBuilder(
-                  future: _yandexMapController.future,
-                  builder: (_, snapshot) {
-                    final controller = snapshot.data;
-                    if(controller != null) return MapControl(mapController: controller);
-                    return const SizedBox();
-              })
-            ]
-          )
-      ),
+          )),
+        body: Stack(
+          children: [
+            YandexMap(
+              onMapCreated: onCreateMap,
+              mapObjects: [
+                ...mapObjects,
+                widget.startPlacemark,
+                widget.endPlacemark
+              ]
+          ),
+            FutureBuilder(
+                future: _yandexMapController.future,
+                builder: (_, snapshot) {
+                  final controller = snapshot.data;
+                  if(controller != null) return MapControl(mapController: controller);
+                  return const SizedBox();
+            })
+          ]
+        )
     );
   }
 

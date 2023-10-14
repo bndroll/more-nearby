@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:vtb_map/core/utils/utility_types/failure.dart';
+import 'package:vtb_map/features/banks/entities/cash_machine.dart';
 import 'package:vtb_map/features/banks/entities/department.dart';
 import 'package:vtb_map/features/banks/entities/tag.dart';
 import 'package:vtb_map/features/map/domain/entities/app_location.dart';
@@ -24,5 +25,12 @@ class BanksRepository {
     if(res.statusCode == 500) return const Left(Failure(message: 'Ошибка сервера'));
     if(res.statusCode >= 400) return const Left(Failure(message: ''));
     return Right(Tag.listFromJson(res.body));
+  }
+
+  Future<Either<Failure, List<CashMachine>>> getCashMachines() async {
+    final res = await http.get(Uri.parse('$_baseUrl/api/cash-machine'));
+    if(res.statusCode == 500) return const Left(Failure(message: 'Ошибка сервера'));
+    if(res.statusCode >= 400) return const Left(Failure(message: ''));
+    return Right(CashMachine.listFromJson(res.body));
   }
 }

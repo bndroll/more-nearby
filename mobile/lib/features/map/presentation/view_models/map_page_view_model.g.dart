@@ -16,12 +16,33 @@ mixin _$MapPageViewModel on MapPageViewModelBase, Store {
           Computed<bool>(() => super.isDepartmentsLoaded,
               name: 'MapPageViewModelBase.isDepartmentsLoaded'))
       .value;
+  Computed<bool>? _$isCashMachinesLoadedComputed;
+
+  @override
+  bool get isCashMachinesLoaded => (_$isCashMachinesLoadedComputed ??=
+          Computed<bool>(() => super.isCashMachinesLoaded,
+              name: 'MapPageViewModelBase.isCashMachinesLoaded'))
+      .value;
   Computed<List<Department>>? _$departmentsComputed;
 
   @override
   List<Department> get departments => (_$departmentsComputed ??=
           Computed<List<Department>>(() => super.departments,
               name: 'MapPageViewModelBase.departments'))
+      .value;
+  Computed<bool>? _$isShowCashMachinesComputed;
+
+  @override
+  bool get isShowCashMachines => (_$isShowCashMachinesComputed ??=
+          Computed<bool>(() => super.isShowCashMachines,
+              name: 'MapPageViewModelBase.isShowCashMachines'))
+      .value;
+  Computed<List<CashMachine>>? _$cashMachinesComputed;
+
+  @override
+  List<CashMachine> get cashMachines => (_$cashMachinesComputed ??=
+          Computed<List<CashMachine>>(() => super.cashMachines,
+              name: 'MapPageViewModelBase.cashMachines'))
       .value;
 
   late final _$_stateAtom =
@@ -58,7 +79,10 @@ mixin _$MapPageViewModel on MapPageViewModelBase, Store {
   String toString() {
     return '''
 isDepartmentsLoaded: ${isDepartmentsLoaded},
-departments: ${departments}
+isCashMachinesLoaded: ${isCashMachinesLoaded},
+departments: ${departments},
+isShowCashMachines: ${isShowCashMachines},
+cashMachines: ${cashMachines}
     ''';
   }
 }

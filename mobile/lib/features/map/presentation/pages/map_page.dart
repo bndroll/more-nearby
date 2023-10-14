@@ -12,6 +12,7 @@ import 'package:vtb_map/core/presentation/bottom_sheet/presentation/default_bott
 import 'package:vtb_map/core/routing/routes_path.dart';
 import 'package:vtb_map/features/banks/presentation/pages/departments_events_modal_page.dart';
 import 'package:vtb_map/features/banks/presentation/pages/filter_departments_page.dart';
+import 'package:vtb_map/features/banks/presentation/widgets/cash_machine_view.dart';
 import 'package:vtb_map/features/banks/presentation/widgets/department_view.dart';
 import 'package:vtb_map/features/map/domain/entities/app_location.dart';
 import 'package:vtb_map/features/map/domain/services/location_service.dart';
@@ -45,7 +46,7 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
+class _MapPageState extends State<MapPage> with WidgetsBindingObserver, TickerProviderStateMixin {
   final Completer<YandexMapController> _controller = Completer();
   final LocationService _locationService = locator<LocationService>();
   late StreamSubscription<LocationData> _streamSubscription;
@@ -57,7 +58,7 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
   late final YandexMapHelper _yMapHelper;
   late final wContext = context;
   Point? endPoint;
-
+  late final TabController _tabController = TabController(length: 2, vsync: this);
 
   onCursorTap() async {
     (await locator<GetCurrentUserLocationUseCase>().execute(null))
@@ -69,8 +70,15 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    _tabController.addListener(_handleTab);
     _viewModel.getDepartments();
+    _viewModel.getCashMachines();
     super.initState();
+  }
+
+  _handleTab() {
+    final index = _tabController.index;
+    _viewModel.toggleFilter(index);
   }
 
   onTapCreateDrivingRoute() async {
@@ -125,84 +133,88 @@ class _MapPageState extends State<MapPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-          appBar: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: Theme
-                  .of(context)
-                  .colorScheme
-                  .background,
-              flexibleSpace: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .secondaryContainer,
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular((10)))),
-                    child: TabBar(
-                      padding: const EdgeInsets.all(5),
-                      dividerColor: Colors.transparent,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular((10))),
-                          color: Colors.white),
-                      unselectedLabelColor: Colors.black,
-                      labelColor: Theme
+    return Scaffold(
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Theme
+                .of(context)
+                .colorScheme
+                .background,
+            flexibleSpace: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Theme
                           .of(context)
                           .colorScheme
-                          .primary,
-                      tabs: const [
-                        Tab(text: 'Отделения'),
-                        Tab(text: 'Банкоматы')
-                      ],
-                    ),
+                          .secondaryContainer,
+                      borderRadius: const BorderRadius.all(
+                          Radius.circular((10)))),
+                  child: TabBar(
+                    controller: _tabController,
+                    padding: const EdgeInsets.all(5),
+                    dividerColor: Colors.transparent,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicator: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular((10))),
+                        color: Colors.white),
+                    unselectedLabelColor: Colors.black,
+                    labelColor: Theme
+                        .of(context)
+                        .colorScheme
+                        .primary,
+                    tabs: const [
+                      Tab(text: 'Отделения'),
+                      Tab(text: 'Банкоматы')
+                    ],
                   ),
                 ),
-              )),
-          bottomSheet: const DepartmentEventModalPage(),
-          body: Stack(
-            children: [
-              Observer(
-                builder: (_) =>
-                    YandexMap(
-                      key: mapKey,
-                      mapObjects: [
-                        ..._viewModel.departments.map((d) =>
-                            DepartmentView(
-                                departmentId: d.id,
-                                location: d.point,
-                                onTap: _buildOnDepartmentTap(d.id, context))),
-                        if (endPoint != null)
-                          RoutePointView(
-                            id: 'end_point',
-                            location: AppLocation(
-                                lat: endPoint?.latitude ?? 0,
-                                long: endPoint?.longitude ?? 0),
-                          )
-                      ],
-                      mapMode: MapMode.driving,
-                      // onMapTap: onMapTap,
-                      onMapCreated: onMapCreated,
-                      onUserLocationAdded: onUserLocationAdded,
-                    ),
               ),
-              FutureBuilder(
-                future: _controller.future,
-                  builder: (_, snapshot) {
-                    final yController = snapshot.data;
-                    if(yController != null) return MapControl(mapController: yController);
-                    return const SizedBox();
-                  }
-              )
-            ],
-          )
-      ),
+            )),
+        bottomSheet: const DepartmentEventModalPage(),
+        body: Stack(
+          children: [
+            Observer(
+              builder: (_) =>
+                  YandexMap(
+                    key: mapKey,
+                    mapObjects: [
+                      if(_viewModel.isShowCashMachines) ..._viewModel.cashMachines.map((m) => CashMachineView(
+                          departmentId: m.id,
+                          cashMachineType: m.type,
+                          location: m.location,
+                          onTap: (){}
+                      )),
+                      if(!_viewModel.isShowCashMachines) ..._viewModel.departments.map((d) =>
+                          DepartmentView(
+                              departmentId: d.id,
+                              location: d.point,
+                              onTap: _buildOnDepartmentTap(d.id, context))),
+                      if (endPoint != null)
+                        RoutePointView(
+                          id: 'end_point',
+                          location: AppLocation(
+                              lat: endPoint?.latitude ?? 0,
+                              long: endPoint?.longitude ?? 0),
+                        )
+                    ],
+                    mapMode: MapMode.driving,
+                    // onMapTap: onMapTap,
+                    onMapCreated: onMapCreated,
+                    onUserLocationAdded: onUserLocationAdded,
+                  ),
+            ),
+            FutureBuilder(
+              future: _controller.future,
+                builder: (_, snapshot) {
+                  final yController = snapshot.data;
+                  if(yController != null) return MapControl(mapController: yController);
+                  return const SizedBox();
+                }
+            )
+          ],
+        )
     );
   }
 }
