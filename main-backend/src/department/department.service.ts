@@ -43,7 +43,7 @@ export class DepartmentService {
           ...item,
           analytic: {
             queueCount: analytic ? parseInt(analytic.count) : 0,
-            waitingTIme: analytic ? parseInt(analytic.sum) : 0,
+            waitingTime: analytic ? parseInt(analytic.sum) : 0,
           },
         };
       });
