@@ -2,7 +2,9 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { AdminGuard } from '../user/guards/admin.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Employee')
 @Controller('employee')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {

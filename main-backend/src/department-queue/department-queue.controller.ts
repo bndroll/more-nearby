@@ -2,7 +2,9 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { DepartmentQueueService } from './department-queue.service';
 import { CreateDepartmentQueueDto } from './dto/create-department-queue.dto';
 import { AdminGuard } from '../user/guards/admin.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Department Queue')
 @Controller('department-queue')
 export class DepartmentQueueController {
   constructor(private readonly departmentQueueService: DepartmentQueueService) {

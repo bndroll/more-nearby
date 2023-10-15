@@ -14,6 +14,7 @@ const App = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedDep, setSelectedDep] = useState(null);
   const [departments, setDepartments] = useState([]);
+  const [createTicketInProgress, setCreateTicketInProgress] = useState(false);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -24,12 +25,9 @@ const App = () => {
             onSelect={(dep) => setSelectedDep(dep)}
             selectedDep={selectedDep}
           />
-          <CreateTicket
-            show={showForm}
-            toggle={() => setShowForm((prev) => !prev)}
-          />
+
           <Button
-            onClick={() => setShowForm(true)}
+            onClick={() => setCreateTicketInProgress(true)}
             sx={{
               borderRadius: 16,
               position: "absolute",
@@ -40,11 +38,16 @@ const App = () => {
           >
             Оформить заявку
           </Button>
-          <SideBar
-            onLoadDeps={(deps) => setDepartments(deps)}
-            selectedDep={selectedDep}
-            onSelect={(dep) => setSelectedDep(dep)}
-          />
+          {createTicketInProgress ? (
+            <CreateTicket finish={() => setCreateTicketInProgress(false)} />
+          ) : (
+            <SideBar
+              createTicket={() => setCreateTicketInProgress(true)}
+              onLoadDeps={(deps) => setDepartments(deps)}
+              selectedDep={selectedDep}
+              onSelect={(dep) => setSelectedDep(dep)}
+            />
+          )}
         </AppContext.Provider>
       </CssVarsProvider>
     </QueryClientProvider>

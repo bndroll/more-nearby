@@ -4,7 +4,9 @@ import { CreateCashMachineDto } from './dto/create-cash-machine.dto';
 import { AdminGuard } from '../user/guards/admin.guard';
 import { CreateCashMachineHistoryDto } from './dto/create-cash-machine-history.dto';
 import { UpdateBalanceForce } from './dto/update-cash-machine.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Cash Machine')
 @Controller('cash-machine')
 export class CashMachineController {
   constructor(private readonly cashMachineService: CashMachineService) {
