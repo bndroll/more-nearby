@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:vtb_map/core/di/locator.dart';
 import 'package:vtb_map/features/ticket/domain/store/create_ticket_store.dart';
 
@@ -13,7 +14,8 @@ class _TicketViewStepState extends State<TicketViewStep> {
 
   final _createTicketStore = locator<CreateTicketStore>();
 
-  late final _ticketNum = _createTicketStore.ticket?.id ?? '';
+  late final _ticketNum = _createTicketStore.ticket?.num ?? 0;
+  late final _ticketStr = _createTicketStore.ticket?.title ?? '';
   late final address = _createTicketStore.departments.firstWhere((element) => _createTicketStore.selectedDepartmentId == element.departmentExtended.id).departmentExtended.address;
 
   @override
@@ -39,12 +41,12 @@ class _TicketViewStepState extends State<TicketViewStep> {
         ),
         Center(
           child: Text(
-            _ticketNum,
+            '$_ticketStr $_ticketNum',
             style: const TextStyle(
               fontSize: 48
             ),
           ),
-        )
+        ),
       ],
     );
   }

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:vtb_map/core/notifications/notifications.dart';
 import 'package:vtb_map/features/map/domain/entities/app_location.dart';
 import 'package:vtb_map/features/map/domain/use_cases/create_driving_route_use_case.dart';
 import 'package:vtb_map/features/map/domain/use_cases/create_pedestrian_route_use_case.dart';
@@ -45,6 +47,13 @@ class _RoutePageState extends State<RoutePage>  with TickerProviderStateMixin{
     super.initState();
     _handleRoute();
     _tabController.addListener(_handleRoute);
+    showNotification(
+      text: 'Не жалаете ли встать в элесктронную очередь банка ВТБ',
+      actions: [
+        const AndroidNotificationAction('0', 'Да'),
+        const AndroidNotificationAction('1', 'Неь')
+      ]
+    );
   }
 
   _handleRoute() {

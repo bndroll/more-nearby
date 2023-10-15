@@ -31,7 +31,9 @@ class _ChooseQueueDurationStepState extends State<ChooseQueueDurationStep> {
         request: 'sasd',
         status: 'Pending',
         userId: const String.fromEnvironment('USER_ID'),
-        tagId: _createDepartmentStore.selectedTagsIds[0], visitDate: DateTime.now(), departmentQueueId: ''))
+        tagId: _createDepartmentStore.selectedTagsIds[0],
+       visitDate: DateTime.now(),
+       departmentQueueId: '4978454c-2ba5-4d6e-aa67-80cbee882140'))
    ).match(
            (l) => debugPrint(l.message),
            (r) => _createDepartmentStore.setStepIndex(_createDepartmentStore.currStepIndex +1 )

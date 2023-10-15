@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:vtb_map/core/di/locator.dart';
+import 'package:vtb_map/features/banks/presentation/widgets/department_card.dart';
 import 'package:vtb_map/features/map/domain/use_cases/get_current_user_location_use_case.dart';
 
 import '../../../../core/routing/routes_path.dart';
@@ -13,6 +16,7 @@ class DepartmentInfoPage extends StatefulWidget {
 
   final Department department;
 
+
   @override
   State<DepartmentInfoPage> createState() => _DepartmentInfoPageState();
 }
@@ -20,13 +24,30 @@ class DepartmentInfoPage extends StatefulWidget {
 class _DepartmentInfoPageState extends State<DepartmentInfoPage> {
    final _tooltipBehavior = TooltipBehavior(enable: true);
    final List<_SalesData> data = [
-     _SalesData('Jan', 35),
-     _SalesData('Feb', 28),
-     _SalesData('Mar', 34),
-     _SalesData('Apr', 32),
-     _SalesData('May', 40),
-     _SalesData('June', 10)
+     _SalesData('9', 35),
+     _SalesData('10', 28),
+     _SalesData('11', 34),
+     _SalesData('12', 32),
+     _SalesData('13', 40),
+     _SalesData('14', 10),
+     _SalesData('15', 50),
+     _SalesData('16', 12),
+     _SalesData('17', 17),
+     _SalesData('18', 13),
+     _SalesData('19', 11)
    ];
+
+   DepartmentWorkload getByTarget(num time) {
+     if(time <= 20) return DepartmentWorkload.good;
+     if(time <= 70) return DepartmentWorkload.warning;
+     return DepartmentWorkload.danger;
+   }
+
+   int getMinutesByDepartament(DepartmentWorkload departmentWorkload) => switch(departmentWorkload) {
+    DepartmentWorkload.danger => Random().nextInt(180) + 70,
+    DepartmentWorkload.warning => Random().nextInt(50) + 21,
+    DepartmentWorkload.good => Random().nextInt(20)
+   };
 
   _buildOnTapCreateDrivingRoute(BuildContext context) =>  () async {
     final pEnd = widget.department.point;
@@ -106,6 +127,16 @@ class _DepartmentInfoPageState extends State<DepartmentInfoPage> {
             ),
             const SizedBox(height: 10),
             Text(widget.department.info),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TimestampCard(
+                  departmentWorkload: getByTarget(widget.department.target),
+                  time: '${getMinutesByDepartament(getByTarget(widget.department.target))}',
+                  category: 'Займет',
+                  isGroup: true,
+              ),
+            ),
             const SizedBox(height: 10),
             Container(
               decoration: ShapeDecoration(

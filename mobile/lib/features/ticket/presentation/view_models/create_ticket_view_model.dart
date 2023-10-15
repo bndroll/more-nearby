@@ -86,12 +86,11 @@ abstract class CreateTicketViewModelBase with Store{
     else {
       _setState(_state.copyWith(selectedTagIds: [tagId, ...selectedTagsIds]));
     }
+    _createTicketStore.updateStepper(selectedTagIds: _state.selectedTagIds);
 
   }
 
   goChooseDepartment() async {
-    _createTicketStore.updateStepper(selectedTagIds: _state.selectedTagIds);
-    debugPrint(_state.selectedTagIds.toString());
     _setState(_state.copyWith(createTicketStatus: RequestStatus.loading));
     final res = await _loadRequiredDepartmentsUseCase.execute(_state.selectedTagIds);
     _setState(_state.copyWith(createTicketStatus: RequestStatus.successful));

@@ -7,7 +7,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 late AndroidNotificationChannel _androidNotificationChannel;
 
+handleBackgroundNessgaes(NotificationResponse s){}
 
+handleLocalMEssgaes(NotificationResponse ew){}
 
 bool isFlutterLocalNotificationsInitialized = false;
 
@@ -31,7 +33,7 @@ Future<void> setupFlutterNotifications() async {
         ?.createNotificationChannel(_androidNotificationChannel);
   }
 
-  const android = AndroidInitializationSettings('@mipmap/launcher_icon');
+  const android = AndroidInitializationSettings('@mipmap/ic_launcher');
   final ios = DarwinInitializationSettings(
       notificationCategories: [
         DarwinNotificationCategory(
@@ -48,8 +50,8 @@ Future<void> setupFlutterNotifications() async {
   final settings = InitializationSettings(android: android, iOS: ios);
   await _flutterLocalNotificationsPlugin.initialize(
       settings,
-      onDidReceiveBackgroundNotificationResponse: (_) {},
-      onDidReceiveNotificationResponse: (_) {}
+      onDidReceiveBackgroundNotificationResponse: handleBackgroundNessgaes,
+      onDidReceiveNotificationResponse: handleLocalMEssgaes
   );
   isFlutterLocalNotificationsInitialized = true;
 }
@@ -58,3 +60,28 @@ Future<void> initNotifications() async {
   await setupFlutterNotifications();
 
 }
+
+Future<void> showNotification(
+    {
+      String? title,
+      String? text,
+      StyleInformation? styleInformation,
+      Duration cancelAfter = const Duration(minutes: 20),
+      List<AndroidNotificationAction> actions = const []
+    }) async {
+    _flutterLocalNotificationsPlugin.show(
+        title.hashCode,
+        title,
+        text,
+        NotificationDetails(
+            android: AndroidNotificationDetails(
+                _androidNotificationChannel.id,
+                _androidNotificationChannel.name,
+                channelDescription: _androidNotificationChannel.description,
+                styleInformation: styleInformation,
+                timeoutAfter: cancelAfter.inMilliseconds,
+                actions: actions
+            ),
+        ),
+    );
+  }
