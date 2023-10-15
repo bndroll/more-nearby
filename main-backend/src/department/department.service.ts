@@ -81,11 +81,8 @@ export class DepartmentService {
     }
 
     let currentNum = new Date().getUTCHours() + 3;
-    if (currentNum > 21) {
+    if (currentNum > 21 || currentNum < 9) {
       currentNum = 21;
-    }
-    if (currentNum < 9) {
-      currentNum = 9;
     }
     const departmentLoad = await this.departmentRepository.findDepartmentLoad(currentNum);
     return departments.map(item => ({
