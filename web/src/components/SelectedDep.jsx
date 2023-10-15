@@ -86,8 +86,7 @@ export const SelectedDep = ({ selectedDep, onSelect, createTicket }) => {
     if (selectedDep) {
       const dep = await getDepartment(selectedDep.id);
       setSelected(dep);
-      console.log('dep =', dep);
-      const wTime = dep.queues.reduce((res, item) => res += item.analytic.waitingTIme, 0);
+      const wTime = dep.queues.reduce((res, item) => res += item.analytic.waitingTime, 0);
       setWaitingTme(wTime);
     }
   }, [selectedDep]);
