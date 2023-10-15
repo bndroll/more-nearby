@@ -84,7 +84,7 @@ const windowQueue = [
   },
 ];
 
-export const SelectedDep = ({ selectedDep, onSelect }) => {
+export const SelectedDep = ({ selectedDep, onSelect, createTicket }) => {
   const [selected, setSelected] = useState(null);
 
   useEffect(async () => {
@@ -142,7 +142,9 @@ export const SelectedDep = ({ selectedDep, onSelect }) => {
               <Bar dataKey="value" fill="#9CA9CA" barSize={35} />
             </BarChart>
           </div>
-          <Button size="lg">Оформить заявку</Button>
+          <Button onClick={() => createTicket()} size="lg">
+            Оформить заявку
+          </Button>
           <div>
             <Typography level="title-lg" sx={{ mt: 3, mb: 1 }}>
               Очереди в отделениях
