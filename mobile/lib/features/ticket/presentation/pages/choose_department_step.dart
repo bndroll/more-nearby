@@ -18,7 +18,7 @@ class _ChooseDepartmentStepState extends State<ChooseDepartmentStep> {
 
   @override
   void initState() {
-    _createDepartmentStore.updateStepper(chosenDepId: _createDepartmentStore.departments[0].departmentExtended.id);
+      _createDepartmentStore.updateStepper(chosenDepId: _createDepartmentStore.departments[0].departmentExtended.id);
     super.initState();
   }
 
@@ -61,11 +61,13 @@ class _ChooseDepartmentStepState extends State<ChooseDepartmentStep> {
             child: Observer(builder: (_) =>
                 SeparatedListBuilder(
                     itemCount: _createDepartmentStore.departments.length,
-                    itemBuilder: (_, index) => DepartmentCard(
-                            departmentWithTimes: _createDepartmentStore.departments[index],
-                            isChosen:  _createDepartmentStore.departments[index].departmentExtended.id == _createDepartmentStore.selectedDepartmentId,
-                            onChoose: () => _createDepartmentStore.updateStepper(chosenDepId: _createDepartmentStore.departments[index].departmentExtended.id),
-                        ),
+                    itemBuilder: (_, index) => Observer(
+                      builder: (_) => DepartmentCard(
+                              departmentWithTimes: _createDepartmentStore.departments[index],
+                              isChosen:  _createDepartmentStore.departments[index].departmentExtended.id == _createDepartmentStore.selectedDepartmentId,
+                              onChoose: () => _createDepartmentStore.updateStepper(chosenDepId: _createDepartmentStore.departments[index].departmentExtended.id),
+                          ),
+                    ),
                     separatorBuilder: (_, __) => const SizedBox(height: 8)
                 )
             ),

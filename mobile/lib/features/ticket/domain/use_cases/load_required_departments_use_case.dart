@@ -29,6 +29,7 @@ class LoadRequiredDepartmentUseCase
     final List<DepartmentExtended> departmentsExtended =
         (await _ticketRepository.getDepartmentsByTags(args, position))
             .match((l) => [], (r) => r);
+
     final dDriving = await Future.wait(departmentsExtended.map((d) async =>
         (await CreateDrivingRouteUseCase()
                 .execute(CreateRoutesArgs(start: position, end: d.location)))
@@ -67,7 +68,6 @@ class LoadRequiredDepartmentUseCase
           pedestrianTimeText: shortestTimePedestrianRoute?.text ?? '',
           pedestrianTime: shortestTimePedestrianRoute?.value ?? 0);
     }).toList();
-    debugPrint('---ALL LOADED---');
     _createTicketStore.updateStepper(requiredDeps: departmentsWithTimes);
     _createTicketStore.setStepIndex(_createTicketStore.currStepIndex + 1);
     return Right(departmentsWithTimes);

@@ -64,6 +64,7 @@ abstract class CreateTicketViewModelBase with Store{
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final _loadRequiredDepartmentsUseCase = LoadRequiredDepartmentUseCase();
+  final _createTicketStore = locator<CreateTicketStore>();
 
   @computed
   List<Tag> get tags => locator<TagStore>().tags;
@@ -89,6 +90,8 @@ abstract class CreateTicketViewModelBase with Store{
   }
 
   goChooseDepartment() async {
+    _createTicketStore.updateStepper(selectedTagIds: _state.selectedTagIds);
+    debugPrint(_state.selectedTagIds.toString());
     _setState(_state.copyWith(createTicketStatus: RequestStatus.loading));
     final res = await _loadRequiredDepartmentsUseCase.execute(_state.selectedTagIds);
     _setState(_state.copyWith(createTicketStatus: RequestStatus.successful));

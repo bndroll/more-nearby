@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vtb_map/features/ticket/presentation/pages/choose_department_step.dart';
+import 'package:vtb_map/features/ticket/presentation/pages/choose_queue_duration_step.dart';
 import 'package:vtb_map/features/ticket/presentation/pages/create_physical_ticket.dart';
 import 'package:vtb_map/features/ticket/presentation/pages/create_ticket_stepper.dart';
 
 import '../../../../core/presentation/bottom_sheet/presentation/default_bottom_sheet_header.dart';
+import '../../../ticket/presentation/pages/ticket_view_step.dart';
 import 'filter_departments_page.dart';
 
 class DepartmentEventModalPage extends StatefulWidget {
@@ -56,7 +58,9 @@ class _DepartmentEventModalPageState extends State<DepartmentEventModalPage> {
                       ? const FilterDepartmentsPage()
                       : CreateTicketStepper(steps: const [
                         CreatePhysicalTicket(),
-                        ChooseDepartmentStep()
+                        ChooseDepartmentStep(),
+                        ChooseQueueDurationStep(),
+                        TicketViewStep()
                   ])
                   ),
                 ),

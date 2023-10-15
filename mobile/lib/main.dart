@@ -1,13 +1,16 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:vtb_map/core/di/locator.dart';
+import 'package:vtb_map/core/notifications/notifications.dart';
 import 'package:vtb_map/core/routing/router.dart';
 import 'package:vtb_map/core/theming/light_theme.dart';
 import 'features/map/presentation/pages/map_page.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initNotifications();
   setup();
+
   runApp(const MyApp());
 }
 
